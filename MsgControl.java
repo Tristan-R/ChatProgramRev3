@@ -7,7 +7,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public abstract class MsgControl implements Runnable {
+public abstract class MsgControl implements MsgCommands, Runnable {
 
     private String name;
 
@@ -30,7 +30,15 @@ public abstract class MsgControl implements Runnable {
     Receive receive;
 
     Send send;
+/*                                    // Should just add these all into here this abstract class and remove interface.
+    void sendToAll();
 
+    void sendTo(String name);
+
+    void exit();
+
+    String getClientsList();
+*/
     MsgControl(BufferedReader in, PrintWriter out) {
         this.in = in;
         this.out = out;
@@ -44,6 +52,8 @@ public abstract class MsgControl implements Runnable {
             while (true) {
                 out.println("Please enter a username (max 15 characters):");
                 name = in.readLine();
+                // Need to improve for if the user enters a name already in use
+                // Should it allow spaces
                 if (name.length() <= 15) {
                     clients.put(name, out);
                     break;
@@ -68,13 +78,35 @@ public abstract class MsgControl implements Runnable {
         receiveThread.start();
     }
 
-    public void send() {
+    public void sendToAll() {
         notifyAll();
 
     }
 
     public void run() {
         startThreads();
+
+        try {
+            while (!socket.isClosed()) {
+                if (newMessages.size() <= 0) {
+                    wait();
+
+                } else {
+                    String nextMessage = newMessages.remove(0);
+                    String[] parts = nextMessage.split(" ");
+                    int identifier = Integer.parseInt(parts[0]);
+
+                    switch (identifier) {
+                        case 0 :
+
+
+                    }
+                }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
 
     }
