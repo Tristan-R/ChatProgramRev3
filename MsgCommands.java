@@ -1,2 +1,2 @@
-public class MsgCommands {
+public interface MsgCommands {
 }
