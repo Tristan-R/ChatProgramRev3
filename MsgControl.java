@@ -52,7 +52,7 @@ public abstract class MsgControl implements MsgCommands, Runnable {
             while (true) {
                 out.println("Please enter a username (max 15 characters):");
                 name = in.readLine();
-                // Need to improve for if the user enters a name already in use
+                // Need to improve for when the user enters a name already in use
                 // Should it allow spaces
                 if (name.length() <= 15) {
                     clients.put(name, out);
@@ -78,7 +78,7 @@ public abstract class MsgControl implements MsgCommands, Runnable {
         receiveThread.start();
     }
 
-    public void sendToAll() {
+    public void sendToAll() { // Make private after removing interface?
         notifyAll();
 
     }
