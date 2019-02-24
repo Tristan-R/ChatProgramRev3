@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.net.Socket;
 
 public class ClientThread extends MsgControl {
@@ -8,12 +9,26 @@ public class ClientThread extends MsgControl {
 
     @Override
     void exit() {
-
+        try {
+            receive.interrupt();
+            send.interrupt();
+            socket.close();
+            System.out.println("Client has disconnected on " + socket.getLocalPort() + " : " + socket.getPort());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     void brokenMsg() {
-
+        if (++brokenMsgCount > 3) {
+            String returnMsg = msgBuilder(1, "server", "We could not process your last message.");
+            out.println(returnMsg);
+        } else {
+            String returnMsg = msgBuilder(6, "server", "Weak connection to server, attempting to reconnect.");
+            out.println(returnMsg);
+            exit();
+        }
     }
 
     @Override
@@ -22,28 +37,30 @@ public class ClientThread extends MsgControl {
             clients.get("server").println(message);
 
         } else {
-            out.println("You do not have permission to do that.");
+            String returnMsg = msgBuilder(1, "server", "You do not have permission to do that.");
+            out.println(returnMsg);
         }
     }
 
     @Override
     void msgAll(String message) {
-        String messageOut = name + " > " + message;
+        String messageOut = msgBuilder(2, name, message);
         messagesOut.add(messageOut);
         notifyAll();
     }
 
-    // message will have format (client)~(message)
+    // message will have format (toUser)>(message)
     @Override
     void msgDirect(String name, String message) {
-        String[] parts = message.split("~");
+        String[] parts = message.split(">", 1);
 
         if (clients.containsKey(parts[0])) {
-            String messageOut = name + " (direct) > " + message;
+            String messageOut = msgBuilder(3, name, parts[1]);
             clients.get(parts[0]).println(messageOut);
 
         } else {
-            out.println("There is not a user with this name.");
+            String messageOut = msgBuilder(1, "server", "There is not a user with this name.");
+            out.println(messageOut);
         }
     }
 
@@ -59,10 +76,12 @@ public class ClientThread extends MsgControl {
                 clients.remove(toKick);
 
             } else {
-                out.println("User does not exist.");
+                String messageOut = msgBuilder(1, "server", "User does not exist.");
+                out.println(messageOut);
             }
         } else {
-            out.println("You do not have permission to perform this command.");
+            String messageOut = msgBuilder(1, "server", "You do not have permission to do that.");
+            out.println(messageOut);
         }
     }
 
