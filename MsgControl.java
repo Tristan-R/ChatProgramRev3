@@ -11,41 +11,42 @@ import java.util.HashMap;
 // Messages will have the format: (identifier)~(name)~(message)
 public abstract class MsgControl implements Runnable {
 
-    private String name;
+    protected String name;
 
     private Socket socket;
 
     private BufferedReader in;
 
-    private PrintWriter out;
+    protected PrintWriter out;
 
-    private Thread receiveThread;
+    protected static HashMap<String, PrintWriter> clients;
 
-    private Thread sendThread;
-
-    static HashMap<String, PrintWriter> clients;
+    // Used to add admins that can message the server (and maybe other privileges)
+    protected static ArrayList<String> admins;
 
     private ArrayList<String> newMessages = new ArrayList<>();
 
-    private ArrayList<String> messagesOut = new ArrayList<>();
+    // Probably should be unique to ClientThread and ServerOut
+    protected ArrayList<String> messagesOut = new ArrayList<>();
 
-    Receive receive;
+    private Receive receive;
 
-    Send send;
+    // Probably should be unique to ClientThread and ServerOut
+    protected Send send;
 
     abstract void exit();
 
     abstract void brokenMsg();
 
-    abstract void msgServer();
+    abstract void msgServer(String message);
 
-    abstract void msgAll();
+    abstract void msgAll(String message);
 
-    abstract void msgDirect(String name);
+    abstract void msgDirect(String name, String message);
 
-    abstract void getClientsList();
+    abstract void getClientsList(String list);
 
-    abstract void kick();
+    abstract void kick(String kickedBy, String toKick);
 
     abstract void startThreads();
 
@@ -78,17 +79,15 @@ public abstract class MsgControl implements Runnable {
         }
     }
 
-    public void sendToAll() { // Make private after removing interface?
-        notifyAll();
-
-    }
-
     public void run() {
         startThreads();
 
         try {
             while (!socket.isClosed()) {
-                if (newMessages.size() <= 0) {
+                if (!clients.containsKey(name)) {
+                    exit();
+
+                } else if (newMessages.size() <= 0) {
                     wait();
 
                 } else {
@@ -111,23 +110,23 @@ public abstract class MsgControl implements Runnable {
                             break;
 
                         case 1 :
-                            msgServer();
+                            msgServer(parts[2]);
                             break;
 
                         case 2 :
-                            msgAll();
+                            msgAll(parts[2]);
                             break;
 
                         case 3 :
-                            msgDirect(parts[1]);
+                            msgDirect(parts[1], parts[2]);
                             break;
 
                         case 4 :
-                            getClientsList();
+                            getClientsList(parts[2]);
                             break;
 
                         case 5 :
-                            kick();
+                            kick(parts[1], parts[2]);
                             break;
 
                     }
