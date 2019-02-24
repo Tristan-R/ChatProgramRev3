@@ -7,7 +7,9 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public abstract class MsgControl implements MsgCommands, Runnable {
+
+// Messages will have the format: (identifier)~(name)~(message)
+public abstract class MsgControl implements Runnable {
 
     private String name;
 
@@ -30,15 +32,23 @@ public abstract class MsgControl implements MsgCommands, Runnable {
     Receive receive;
 
     Send send;
-/*                                    // Should just add these all into here this abstract class and remove interface.
-    void sendToAll();
 
-    void sendTo(String name);
+    abstract void exit();
 
-    void exit();
+    abstract void brokenMsg();
 
-    String getClientsList();
-*/
+    abstract void msgServer();
+
+    abstract void msgAll();
+
+    abstract void msgDirect(String name);
+
+    abstract void getClientsList();
+
+    abstract void kick();
+
+    abstract void startThreads();
+
     MsgControl(BufferedReader in, PrintWriter out) {
         this.in = in;
         this.out = out;
@@ -49,6 +59,7 @@ public abstract class MsgControl implements MsgCommands, Runnable {
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
+            // This should be handled by the client and should be the first message sent
             while (true) {
                 out.println("Please enter a username (max 15 characters):");
                 name = in.readLine();
@@ -67,17 +78,6 @@ public abstract class MsgControl implements MsgCommands, Runnable {
         }
     }
 
-    void startThreads() { // Needs revising
-        send = new Send(clients, messagesOut, name);
-        receive = new Receive(in, newMessages);
-
-        sendThread = new Thread(send);
-        receiveThread = new Thread(receive);
-
-        sendThread.start();
-        receiveThread.start();
-    }
-
     public void sendToAll() { // Make private after removing interface?
         notifyAll();
 
@@ -93,12 +93,41 @@ public abstract class MsgControl implements MsgCommands, Runnable {
 
                 } else {
                     String nextMessage = newMessages.remove(0);
-                    String[] parts = nextMessage.split(" ");
-                    int identifier = Integer.parseInt(parts[0]);
+                    String[] parts = nextMessage.split("~");
+                    int identifier;
+                    if (parts.length == 3) {
+                        identifier = Integer.parseInt(parts[0]);
+                    } else {
+                        identifier = -1;
+                    }
 
                     switch (identifier) {
-                        case 0 :
+                        case -1 :
+                            brokenMsg();
+                            break;
 
+                        case 0 :
+                            exit();
+                            break;
+
+                        case 1 :
+                            msgServer();
+                            break;
+
+                        case 2 :
+                            msgAll();
+                            break;
+
+                        case 3 :
+                            msgDirect(parts[1]);
+                            break;
+
+                        case 4 :
+                            getClientsList();
+                            break;
+
+                        case 5 :
+                            kick();
 
                     }
                 }
@@ -106,9 +135,5 @@ public abstract class MsgControl implements MsgCommands, Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
-
     }
-
 }
