@@ -128,6 +128,7 @@ public abstract class MsgControl implements Runnable {
 
                         case 5 :
                             kick();
+                            break;
 
                     }
                 }
