@@ -4,7 +4,7 @@ public class ChatClient { // Need to send '/' commands first
         0 - EXIT
         1 - Send to server // Needs to be an authorisation on server end
         2 - Send to all
-        3 - Direct message // message will have format (client)~(message)
+        3 - Direct message // message will have format (3)~(fromUser)~(toUser)>(message)
         4 - See current clients
         5 - Kicked from chat
         6 - Reconnect to server? // Does the server need to know it's a reconnect? Or just send EXIT?
