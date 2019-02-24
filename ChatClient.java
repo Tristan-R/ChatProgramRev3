@@ -2,16 +2,17 @@ public class ChatClient { // Need to send '/' commands first
     /*
     Sending Commands:
         0 - EXIT
-        1 - Send to server
+        1 - Send to server // Needs to be an authorisation on server end
         2 - Send to all
-        3 - Direct message
+        3 - Direct message // message will have format (client)~(message)
         4 - See current clients
         5 - kicked from chat?
         6 -
 
-    Receiving Commands:
+    Receiving Commands: // need one for name change
         0 - EXIT
-        1 - Received from server // Should there be a received from server direct?
+        1 - Received from server // Direct messages from server should be handled server end
+                                 // and the server should put (direct) before the message.
         2 - Received global message
         3 - Received direct message
         4 - List of clients
