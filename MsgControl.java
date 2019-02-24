@@ -13,7 +13,7 @@ public abstract class MsgControl implements Runnable {
 
     protected String name;
 
-    private Socket socket;
+    protected Socket socket;
 
     private BufferedReader in;
 
@@ -29,10 +29,12 @@ public abstract class MsgControl implements Runnable {
     // Probably should be unique to ClientThread and ServerOut
     protected ArrayList<String> messagesOut = new ArrayList<>();
 
-    private Receive receive;
+    protected Thread receive;
 
     // Probably should be unique to ClientThread and ServerOut
-    protected Send send;
+    protected Thread send;
+
+    protected int brokenMsgCount = 0;
 
     abstract void exit();
 
@@ -80,6 +82,10 @@ public abstract class MsgControl implements Runnable {
         }
     }
 
+    protected String msgBuilder(int msgType, String from, String message) {
+        return msgType + "~" + from + "~" + message;
+    }
+
     public void run() {
         startThreads();
 
@@ -93,7 +99,7 @@ public abstract class MsgControl implements Runnable {
 
                 } else {
                     String nextMessage = newMessages.remove(0);
-                    String[] parts = nextMessage.split("~");
+                    String[] parts = nextMessage.split("~", 2);
                     int identifier;
                     if (parts.length == 3) {
                         identifier = Integer.parseInt(parts[0]);
