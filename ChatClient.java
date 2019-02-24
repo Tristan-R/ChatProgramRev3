@@ -6,8 +6,9 @@ public class ChatClient { // Need to send '/' commands first
         2 - Send to all
         3 - Direct message // message will have format (client)~(message)
         4 - See current clients
-        5 - kicked from chat?
-        6 -
+        5 - Kicked from chat
+        6 - Reconnect to server? // Does the server need to know it's a reconnect? Or just send EXIT?
+        7 -
 
     Receiving Commands: // need one for name change
         0 - EXIT
@@ -16,7 +17,8 @@ public class ChatClient { // Need to send '/' commands first
         2 - Received global message
         3 - Received direct message
         4 - List of clients
-        5 - kick command?
-        6 -
+        5 - Kick command
+        6 - Try reconnecting
+        7 -
      */
 }
