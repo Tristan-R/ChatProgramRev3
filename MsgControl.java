@@ -61,6 +61,7 @@ public abstract class MsgControl implements Runnable {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
             // This should be handled by the client and should be the first message sent
+            // Cannot include ~, < or >
             while (true) {
                 out.println("Please enter a username (max 15 characters):");
                 name = in.readLine();
