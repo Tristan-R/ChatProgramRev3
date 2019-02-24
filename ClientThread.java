@@ -1,4 +1,2 @@
-package PACKAGE_NAME;
-
-public class ClientThread {
+public class ClientThread extends MsgControl {
 }
