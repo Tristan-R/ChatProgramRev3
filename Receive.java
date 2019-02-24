@@ -28,11 +28,11 @@ public class Receive implements Runnable {
             if (!Thread.interrupted()) {
                 System.err.println("Connection error.");
             }
-            messages.add("0~null~null");
+            messages.add("0~server~null");
 
         } catch (IOException e) {
             e.printStackTrace();
-            messages.add("0~null~null");
+            messages.add("0~server~null");
 
         }
     }
