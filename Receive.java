@@ -25,15 +25,15 @@ public class Receive implements Runnable {
 
             }
         } catch (SocketException e) {
-            System.err.println("Connection error.");
+            if (!Thread.interrupted()) {
+                System.err.println("Connection error.");
+            }
+            messages.add("0~null~null");
 
         } catch (IOException e) {
             e.printStackTrace();
+            messages.add("0~null~null");
 
-        } finally {
-            // Send a close call to .....
         }
     }
-
-
 }
