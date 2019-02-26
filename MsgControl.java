@@ -46,7 +46,7 @@ public abstract class MsgControl implements Runnable {
 
     abstract void msgDirect(String name, String message);
 
-    abstract void getClientsList(String list);
+    abstract void getClientsList();
 
     abstract void kick(String kickedBy, String toKick);
 
@@ -129,7 +129,7 @@ public abstract class MsgControl implements Runnable {
                             break;
 
                         case 4 :
-                            getClientsList(parts[2]);
+                            getClientsList();
                             break;
 
                         case 5 :
