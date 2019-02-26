@@ -10,7 +10,6 @@ public class ClientThread extends MsgControl {
     @Override
     void exit() {
         try {
-            receive.interrupt();
             send.interrupt();
             clients.remove(name);
             socket.close();

@@ -26,12 +26,8 @@ public abstract class MsgControl implements Runnable {
 
     protected static ArrayList<String> removeClients;
 
-    private ArrayList<String> newMessages = new ArrayList<>();
-
     // Probably should be unique to ClientThread and ServerOut
     protected ArrayList<String> messagesOut = new ArrayList<>();
-
-    protected Thread receive;
 
     // Probably should be unique to ClientThread and ServerOut
     protected Thread send;
