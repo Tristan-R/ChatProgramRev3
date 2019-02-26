@@ -65,7 +65,17 @@ public class ClientThread extends MsgControl {
     }
 
     @Override
-    void getClientsList(String list) {
+    void getClientsList() {
+        String list = "";
+        int i = 1;
+        for (String client : clients.keySet()) {
+            list = list.concat("\t" + client);
+
+            if (++i % 4 == 0) {
+                list = list.concat("\n");
+            }
+        }
+
         out.println(list);
     }
 
