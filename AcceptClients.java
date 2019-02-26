@@ -4,17 +4,17 @@ import java.net.Socket;
 
 public class AcceptClients implements Runnable {
 
-    private ServerSocket in;
+    private ServerSocket server;
 
-    public AcceptClients(ServerSocket in) {
-        this.in = in;
+    public AcceptClients(ServerSocket server) {
+        this.server = server;
     }
 
     public void run() {
         try {
             while (true) {
-                Socket s = in.accept();
-                System.out.println("Server accepted connection on " + in.getLocalPort() + " ; " + s.getPort());
+                Socket s = server.accept();
+                System.out.println("Server accepted connection on " + server.getLocalPort() + " ; " + s.getPort());
                 ClientThread client = new ClientThread(s);
                 Thread thread = new Thread(client);
                 thread.start();
@@ -24,7 +24,7 @@ public class AcceptClients implements Runnable {
 
         } finally {
             try {
-                in.close();
+                server.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
