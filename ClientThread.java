@@ -10,7 +10,6 @@ public class ClientThread extends MsgControl {
     @Override
     void exit() {
         try {
-            send.interrupt();
             clients.remove(name);
             socket.close();
             clients.get("server").println("Client has disconnected on " + socket.getLocalPort() + " : " + socket.getPort());
@@ -22,12 +21,12 @@ public class ClientThread extends MsgControl {
     @Override
     void brokenMsg() {
         if (++brokenMsgCount > 3) {
-            String returnMsg = msgBuilder(1, "server", "We could not process your last message.");
-            out.println(returnMsg);
-        } else {
             String returnMsg = msgBuilder(6, "server", "Weak connection to server, attempting to reconnect.");
             out.println(returnMsg);
             exit();
+        } else {
+            String returnMsg = msgBuilder(1, "server", "We could not process your last message.");
+            out.println(returnMsg);
         }
     }
 
@@ -45,14 +44,18 @@ public class ClientThread extends MsgControl {
     @Override
     void msgAll(String message) {
         String messageOut = msgBuilder(2, name, message);
-        messagesOut.add(messageOut);
-        notifyAll();
+
+        for (String client : clients.keySet()) {
+            if (!client.equals(name)) {
+                clients.get(client).println(messageOut);
+            }
+        }
     }
 
     // message will have format (toUser)>(message)
     @Override
     void msgDirect(String name, String message) {
-        String[] parts = message.split(">", 1);
+        String[] parts = message.split(">", 2);
 
         if (clients.containsKey(parts[0])) {
             String messageOut = msgBuilder(3, name, parts[1]);
@@ -93,10 +96,5 @@ public class ClientThread extends MsgControl {
             String messageOut = msgBuilder(1, "server", "You do not have permission to do that.");
             out.println(messageOut);
         }
-    }
-
-    @Override
-    void startThreads() {
-
     }
 }
