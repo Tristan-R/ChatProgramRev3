@@ -24,6 +24,8 @@ public abstract class MsgControl implements Runnable {
     // Used to add admins that can message the server (and maybe other privileges)
     protected static ArrayList<String> admins;
 
+    protected static ArrayList<String> removeClients;
+
     private ArrayList<String> newMessages = new ArrayList<>();
 
     // Probably should be unique to ClientThread and ServerOut
@@ -90,16 +92,16 @@ public abstract class MsgControl implements Runnable {
         startThreads();
 
         try {
+            String input;
+
             while (!socket.isClosed()) {
-                if (!clients.containsKey(name)) {
+                input = in.readLine();
+
+                if (removeClients.remove(name)) {
                     exit();
 
-                } else if (newMessages.size() <= 0) {
-                    wait();
-
                 } else {
-                    String nextMessage = newMessages.remove(0);
-                    String[] parts = nextMessage.split("~", 2);
+                    String[] parts = input.split("~", 2);
                     int identifier;
                     if (parts.length == 3) {
                         identifier = Integer.parseInt(parts[0]);
@@ -139,8 +141,14 @@ public abstract class MsgControl implements Runnable {
                     }
                 }
             }
-        } catch (InterruptedException e) {
+        } catch (SocketException e) {
+            System.err.println("Connection error.");
+
+        } catch (IOException e) {
             e.printStackTrace();
+
+        } finally {
+            exit();
         }
     }
 }

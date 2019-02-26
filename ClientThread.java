@@ -12,6 +12,7 @@ public class ClientThread extends MsgControl {
         try {
             receive.interrupt();
             send.interrupt();
+            clients.remove(name);
             socket.close();
             clients.get("server").println("Client has disconnected on " + socket.getLocalPort() + " : " + socket.getPort());
         } catch (IOException e) {
