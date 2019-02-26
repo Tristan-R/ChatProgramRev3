@@ -19,18 +19,12 @@ public abstract class MsgControl implements Runnable {
 
     protected PrintWriter out;
 
-    protected static HashMap<String, PrintWriter> clients;
+    protected static HashMap<String, PrintWriter> clients = new HashMap<>();
 
     // Used to add admins that can message the server (and maybe other privileges)
-    protected static ArrayList<String> admins;
+    protected static ArrayList<String> admins = new ArrayList<>();
 
-    protected static ArrayList<String> removeClients;
-
-    // Probably should be unique to ClientThread and ServerOut
-    protected ArrayList<String> messagesOut = new ArrayList<>();
-
-    // Probably should be unique to ClientThread and ServerOut
-    protected Thread send;
+    protected static ArrayList<String> removeClients = new ArrayList<>();
 
     protected int brokenMsgCount = 0;
 
@@ -48,8 +42,6 @@ public abstract class MsgControl implements Runnable {
 
     abstract void kick(String kickedBy, String toKick);
 
-    abstract void startThreads();
-
     MsgControl(BufferedReader in, PrintWriter out) {
         this.in = in;
         this.out = out;
@@ -60,6 +52,7 @@ public abstract class MsgControl implements Runnable {
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
+            /* Needs to go in run statement */
             // This should be handled by the client and should be the first message sent
             // Cannot include ~, < or >
             while (true) {
@@ -85,8 +78,6 @@ public abstract class MsgControl implements Runnable {
     }
 
     public void run() {
-        startThreads();
-
         try {
             String input;
 
@@ -97,7 +88,7 @@ public abstract class MsgControl implements Runnable {
                     exit();
 
                 } else {
-                    String[] parts = input.split("~", 2);
+                    String[] parts = input.split("~", 3);
                     int identifier;
                     if (parts.length == 3) {
                         identifier = Integer.parseInt(parts[0]);
