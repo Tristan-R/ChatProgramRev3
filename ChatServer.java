@@ -22,6 +22,7 @@ public class ChatServer {
 
     public void begin() {
         new Thread(new AcceptClients(in)).start();
+        new Thread(new ServerThread(in)).start();
 
 
     }
