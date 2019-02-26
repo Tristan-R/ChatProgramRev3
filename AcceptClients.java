@@ -15,7 +15,7 @@ public class AcceptClients implements Runnable {
             while (true) {
                 Socket s = in.accept();
                 System.out.println("Server accepted connection on " + in.getLocalPort() + " ; " + s.getPort());
-                MsgControl client = new ClientThread(s); // Need to change to a non-abstract class
+                MsgControl client = new ClientThread(s);
                 Thread thread = new Thread(client);
                 thread.start();
             }
