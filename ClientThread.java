@@ -13,7 +13,7 @@ public class ClientThread extends MsgControl {
             receive.interrupt();
             send.interrupt();
             socket.close();
-            System.out.println("Client has disconnected on " + socket.getLocalPort() + " : " + socket.getPort());
+            clients.get("server").println("Client has disconnected on " + socket.getLocalPort() + " : " + socket.getPort());
         } catch (IOException e) {
             e.printStackTrace();
         }
