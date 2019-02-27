@@ -15,10 +15,11 @@ public abstract class MsgControl implements Runnable {
 
     protected Socket socket;
 
-    private BufferedReader in;
+    protected BufferedReader in;
 
     protected PrintWriter out;
 
+    //Should I move server out and into own variable?
     protected static HashMap<String, PrintWriter> clients = new HashMap<>();
 
     // Used to add admins that can message the server (and maybe other privileges)
@@ -27,6 +28,10 @@ public abstract class MsgControl implements Runnable {
     protected static ArrayList<String> removeClients = new ArrayList<>();
 
     protected int brokenMsgCount = 0;
+
+    abstract boolean endThread();
+
+    abstract String convertMsg(String message);
 
     abstract void exit();
 
@@ -42,6 +47,10 @@ public abstract class MsgControl implements Runnable {
 
     abstract void kick(String kickedBy, String toKick);
 
+    abstract void unknownCommand(int identifier, String from, String message);
+
+    MsgControl() {}
+
     MsgControl(BufferedReader in, PrintWriter out) {
         this.in = in;
         this.out = out;
@@ -54,7 +63,7 @@ public abstract class MsgControl implements Runnable {
             out = new PrintWriter(socket.getOutputStream(), true);
             /* Needs to go in run statement */
             // This should be handled by the client and should be the first message sent
-            // Cannot include ~, < or >
+            // Cannot include ~, <, >, : or ;
             while (true) {
                 out.println("Please enter a username (max 15 characters):");
                 name = in.readLine();
@@ -81,14 +90,19 @@ public abstract class MsgControl implements Runnable {
         try {
             String input;
 
-            while (!socket.isClosed()) {
+            while (!endThread()) {
                 input = in.readLine();
 
                 if (removeClients.remove(name)) {
-                    exit();
+                    return;
 
                 } else {
-                    String[] parts = input.split("~", 3);
+                    /* This else statement should just be a call to a processMsg command and the switch should be
+                     * in the child classes.
+                     */
+                    String message = convertMsg(input);
+                    System.out.println(message);
+                    String[] parts = message.split("~", 3);
                     int identifier;
                     if (parts.length == 3) {
                         identifier = Integer.parseInt(parts[0]);
@@ -125,6 +139,8 @@ public abstract class MsgControl implements Runnable {
                             kick(parts[1], parts[2]);
                             break;
 
+                        default :
+                            unknownCommand(identifier, parts[1], parts[2]);
                     }
                 }
             }
