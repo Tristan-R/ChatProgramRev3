@@ -1,19 +1,14 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 
 public class ChatServer {
 
-    private ServerSocket in;
-    private String name = "server";
-    private BufferedReader userIn;
-    private PrintWriter serverOut;
+    private ServerSocket server;
 
     public ChatServer(int port) {
         try {
-            in = new ServerSocket(port);
-            System.out.println("Server started on port " + in.getLocalPort());
+            server = new ServerSocket(port);
+            System.out.println("Server started on port " + server.getLocalPort());
         } catch (IOException e) {
             System.err.println("Unable to establish server.");
             System.exit(-1);
@@ -21,8 +16,9 @@ public class ChatServer {
     }
 
     public void begin() {
-        new Thread(new AcceptClients(in)).start();
-        new Thread(new ServerThread(in)).start();
+        new Thread(new AcceptClients(server)).start();
+
+        new Thread(new ServerThread(server)).start();
 
 
     }
