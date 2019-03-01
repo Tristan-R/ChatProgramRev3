@@ -13,8 +13,47 @@ public class ClientThread extends MsgControl {
     }
 
     @Override
-    String convertMsg(String message) {
-        return message;
+    void processMsg(String message) {
+        String[] parts = message.split("~", 3);
+        String identifier;
+        if (parts.length == 3) {
+            identifier = parts[0];
+        } else {
+            identifier = "-1";
+        }
+
+        switch (identifier) {
+            case "-1":
+                brokenMsg();
+                break;
+
+            case "0":
+                exit();
+                break;
+
+            case "1":
+                msgServer(parts[2]);
+                break;
+
+            case "2":
+                msgAll(parts[2]);
+                break;
+
+            case "3":
+                msgDirect(parts[1], parts[2]);
+                break;
+
+            case "4":
+                getClientsList();
+                break;
+
+            case "5":
+                kick(parts[1], parts[2]);
+                break;
+
+            default:
+                brokenMsg();
+        }
     }
 
     @Override
@@ -45,7 +84,7 @@ public class ClientThread extends MsgControl {
     @Override
     void msgServer(String message) {
         if (admins.contains(name)) {
-            clients.get("server").println(message);
+            clients.get("server").println(name + " > " + message);
 
         } else {
             String returnMsg = msgBuilder(1, "server", "You do not have permission to do that.");
@@ -116,14 +155,6 @@ public class ClientThread extends MsgControl {
         } else {
             String messageOut = msgBuilder(1, "server", "You do not have permission to do that.");
             out.println(messageOut);
-        }
-    }
-
-    @Override
-    void unknownCommand(int identifier, String from, String message) {
-        switch (identifier) {
-            default:
-                brokenMsg();
         }
     }
 }
