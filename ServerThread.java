@@ -23,39 +23,45 @@ public class ServerThread extends MsgControl {
     }
 
     @Override
-    String convertMsg(String message) {
+    void processMsg(String message) {
         if (message.startsWith("/")) {
             String[] parts = message.split(" ", 2);
 
             switch (parts[0]) {
-                case "/server" :
-                    return msgBuilder(1, name, parts[1]);
+                case "/server":
+                    msgServer(parts[1]);
+                    break;
 
-                case "/direct" :
-                    return msgBuilder(3, name, parts[1]);
+                case "/direct":
+                    msgDirect(name, parts[1]);
+                    break;
 
-                case "/clients" : //Need to fix as the lack of space breaks it
-                    return msgBuilder(4, name, parts[1]);
+                case "/clients":
+                    getClientsList();
+                    break;
 
-                case "/kick" :
-                    return msgBuilder(5, name, parts[1]);
+                case "/kick":
+                    kick(name, parts[1]);
+                    break;
 
-                case "/promote" :
-                    return msgBuilder(100, name, parts[1]);
+                case "/promote":
+                    promote(parts[1]);
+                    break;
 
-                case "/demote" :
-                    return msgBuilder(101, name, parts[1]);
+                case "/demote":
+                    demote(parts[1]);
+                    break;
 
-                default :
-                    return msgBuilder(-1, name, "null");
+                default:
+                    brokenMsg();
             }
 
 
         } else if (message.equals("EXIT")) {
-            return msgBuilder(0, name, "null");
+            exit();
 
         } else {
-            return msgBuilder(2, name, message);
+            msgAll(message);
         }
     }
 
@@ -158,22 +164,6 @@ public class ServerThread extends MsgControl {
             }
         } else {
             out.println("Could not find this user.");
-        }
-    }
-
-    @Override
-    void unknownCommand(int identifier, String from, String message) {
-        switch (identifier) {
-            case 100 :
-                promote(message);
-                break;
-
-            case 101 :
-                demote(message);
-                break;
-
-            default :
-                brokenMsg();
         }
     }
 }
