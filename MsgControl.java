@@ -31,7 +31,7 @@ public abstract class MsgControl implements Runnable {
 
     abstract boolean endThread();
 
-    abstract String convertMsg(String message);
+    abstract void processMsg(String message);
 
     abstract void exit();
 
@@ -47,8 +47,6 @@ public abstract class MsgControl implements Runnable {
 
     abstract void kick(String kickedBy, String toKick);
 
-    abstract void unknownCommand(int identifier, String from, String message);
-
     MsgControl() {}
 
     MsgControl(BufferedReader in, PrintWriter out) {
@@ -62,7 +60,6 @@ public abstract class MsgControl implements Runnable {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
             /* Needs to go in run statement */
-            // This should be handled by the client and should be the first message sent
             // Cannot include ~, <, >, : or ;
             while (true) {
                 out.println("Please enter a username (max 15 characters):");
@@ -96,52 +93,8 @@ public abstract class MsgControl implements Runnable {
                 if (removeClients.remove(name)) {
                     return;
 
-                } else {
-                    /* This else statement should just be a call to a processMsg command and the switch should be
-                     * in the child classes.
-                     */
-                    String message = convertMsg(input);
-                    System.out.println(message);
-                    String[] parts = message.split("~", 3);
-                    int identifier;
-                    if (parts.length == 3) {
-                        identifier = Integer.parseInt(parts[0]);
-                    } else {
-                        identifier = -1;
-                    }
-
-                    switch (identifier) {
-                        case -1 :
-                            brokenMsg();
-                            break;
-
-                        case 0 :
-                            exit();
-                            break;
-
-                        case 1 :
-                            msgServer(parts[2]);
-                            break;
-
-                        case 2 :
-                            msgAll(parts[2]);
-                            break;
-
-                        case 3 :
-                            msgDirect(parts[1], parts[2]);
-                            break;
-
-                        case 4 :
-                            getClientsList();
-                            break;
-
-                        case 5 :
-                            kick(parts[1], parts[2]);
-                            break;
-
-                        default :
-                            unknownCommand(identifier, parts[1], parts[2]);
-                    }
+                } else if (!endThread()) {
+                    processMsg(input);
                 }
             }
         } catch (SocketException e) {
