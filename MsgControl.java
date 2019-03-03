@@ -49,11 +49,6 @@ public abstract class MsgControl implements Runnable {
 
     MsgControl() {}
 
-    MsgControl(BufferedReader in, PrintWriter out) {
-        this.in = in;
-        this.out = out;
-    }
-
     MsgControl(Socket socket) {
         this.socket = socket;
         try {
