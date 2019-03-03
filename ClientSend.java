@@ -8,7 +8,6 @@ public class ClientSend extends MsgControl {
 
     ClientSend(Socket socket) {
         try {
-
             this.socket = socket;
             in = new BufferedReader(new InputStreamReader(System.in));
             out = new PrintWriter(socket.getOutputStream(), true);
