@@ -18,6 +18,7 @@ public class ClientThread extends MsgControl {
         String identifier;
         if (parts.length == 2) {
             identifier = parts[0];
+
         } else {
             identifier = "-1";
         }
@@ -129,7 +130,6 @@ public class ClientThread extends MsgControl {
                 list = list.concat("\n");
             }
         }
-
         out.println(list);
     }
 
