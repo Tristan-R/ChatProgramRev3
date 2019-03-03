@@ -9,6 +9,7 @@ public class ChatServer {
         try {
             server = new ServerSocket(port);
             System.out.println("Server started on port " + server.getLocalPort());
+
         } catch (IOException e) {
             System.err.println("Unable to establish server.");
             System.exit(-1);
@@ -28,6 +29,7 @@ public class ChatServer {
                 if (i + 1 < args.length) {
                     try {
                         portNumber = Integer.parseInt(args[i + 1]);
+
                     } catch (NumberFormatException e) {
                         System.err.println("Error in port number.");
                         System.exit(-1);
