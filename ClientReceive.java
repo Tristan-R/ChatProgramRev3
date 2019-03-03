@@ -1,30 +1,19 @@
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientReceive extends MsgControl {
 
-    ClientReceive(Socket socket) {
-        try {
+    ClientReceive(Socket socket, BufferedReader in) {
             this.socket = socket;
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.in = in;
             out = new PrintWriter(System.out, true);
-
-        } catch (IOException e) {
-            System.err.println("There was an issue establishing a connection.");
-            System.err.println("Closing application.");
-
-        } finally {
-            try {
-                socket.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
+
+    @Override
+    void setName() {
+        }
 
     @Override
     boolean endThread() {
