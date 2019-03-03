@@ -13,7 +13,7 @@ class ServerThread extends MsgControl {
         name = "server";
         in = new BufferedReader(new InputStreamReader(System.in));
         out = new PrintWriter(System.out, true);
-        clients.put(name, out);
+        serverWriter = out;
         admins.add(name);
     }
 
@@ -115,9 +115,7 @@ class ServerThread extends MsgControl {
         String messageOut = msgBuilder(1, name, message);
 
         for (String client : clients.keySet()) {
-            if (!client.equals(name)) {
-                clients.get(client).println(messageOut);
-            }
+            clients.get(client).println(messageOut);
         }
     }
 
