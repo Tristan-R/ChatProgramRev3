@@ -130,7 +130,8 @@ public class ClientThread extends MsgControl {
                 list = list.concat("\n");
             }
         }
-        out.println(list);
+        String messageOut = msgBuilder(4, "null", list);
+        out.println(messageOut);
     }
 
     @Override
