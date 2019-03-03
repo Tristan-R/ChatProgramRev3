@@ -72,7 +72,7 @@ public class ClientThread extends MsgControl {
     @Override
     void brokenMsg() {
         if (++brokenMsgCount > 3) {
-            String returnMsg = msgBuilder(6, "server", "Weak connection to server, attempting to reconnect.");
+            String returnMsg = msgBuilder(0, "server", "Weak connection to server, disconnecting...");
             out.println(returnMsg);
             exit();
 
