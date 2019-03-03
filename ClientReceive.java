@@ -37,6 +37,7 @@ public class ClientReceive extends MsgControl {
         String identifier;
         if (parts.length == 3) {
             identifier = parts[0];
+
         } else {
             identifier = "-1";
         }
