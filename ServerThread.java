@@ -10,10 +10,14 @@ class ServerThread extends MsgControl {
 
     ServerThread(ServerSocket server) {
         this.server = server;
-        name = "server";
         in = new BufferedReader(new InputStreamReader(System.in));
         out = new PrintWriter(System.out, true);
         serverWriter = out;
+    }
+
+    @Override
+    void setName() {
+        name = "server";
         admins.add(name);
     }
 
