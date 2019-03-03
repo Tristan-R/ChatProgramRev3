@@ -78,6 +78,10 @@ public abstract class MsgControl implements Runnable {
         return msgType + "~" + from + "~" + message;
     }
 
+    String msgBuilder(int msgType, String message) {
+        return msgType + "~" + message;
+    }
+
     public void run() {
         try {
             String input;
