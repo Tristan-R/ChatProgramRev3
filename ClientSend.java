@@ -74,6 +74,7 @@ public class ClientSend extends MsgControl {
             }
         } else if (message.equals("EXIT")) {
             exit();
+
         } else {
             msgAll(message);
         }
@@ -81,36 +82,51 @@ public class ClientSend extends MsgControl {
 
     @Override
     void exit() {
+        String msgOut = msgBuilder(0, "null");
+        out.println(msgOut);
 
+        try {
+            socket.close();
+            System.out.println("Disconnected from server.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     void brokenMsg() {
-
+        System.out.println("Your last message could not be processed.");
     }
 
     @Override
     void msgServer(String message) {
-
+        String msgOut = msgBuilder(1, message);
+        out.println(msgOut);
     }
 
     @Override
     void msgAll(String message) {
-
+        String msgOut = msgBuilder(2, message);
+        out.println(msgOut);
     }
 
     @Override
     void msgDirect(String name, String message) {
-
+        String newMessage = name + ">" + message;
+        String msgOut = msgBuilder(3, newMessage);
+        out.println(msgOut);
     }
 
     @Override
     void getClientsList() {
-
+        String msgOut = msgBuilder(4, "null");
+        out.println(msgOut);
     }
 
     @Override
     void kick(String kickedBy, String toKick) {
-
+        String msgOut = msgBuilder(5, toKick);
+        out.println(msgOut);
     }
 }
