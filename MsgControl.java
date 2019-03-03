@@ -22,6 +22,8 @@ public abstract class MsgControl implements Runnable {
     //Should I move server out and into own variable?
     static HashMap<String, PrintWriter> clients = new HashMap<>();
 
+    static PrintWriter serverWriter;
+
     // Used to add admins that can message the server (and maybe other privileges)
     static ArrayList<String> admins = new ArrayList<>();
 
