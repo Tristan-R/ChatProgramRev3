@@ -19,8 +19,6 @@ public class ChatServer {
         new Thread(new AcceptClients(server)).start();
 
         new Thread(new ServerThread(server)).start();
-
-
     }
 
     public static void main(String[] args) {
