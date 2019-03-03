@@ -1,30 +1,19 @@
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientSend extends MsgControl {
 
-    ClientSend(Socket socket) {
-        try {
+    ClientSend(Socket socket, BufferedReader in, PrintWriter out) {
             this.socket = socket;
-            in = new BufferedReader(new InputStreamReader(System.in));
-            out = new PrintWriter(socket.getOutputStream(), true);
-
-        } catch (IOException e) {
-            System.err.println("There was an issue establishing a connection.");
-            System.err.println("Closing application.");
-
-        } finally {
-            try {
-                socket.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+            this.in = in;
+            this.out = out;
     }
+
+    @Override
+    void setName() {
+        }
 
     @Override
     boolean endThread() {
@@ -112,8 +101,7 @@ public class ClientSend extends MsgControl {
 
     @Override
     void msgDirect(String name, String message) {
-        String newMessage = name + ">" + message;
-        String msgOut = msgBuilder(3, newMessage);
+        String msgOut = msgBuilder(3, message);
         out.println(msgOut);
     }
 
