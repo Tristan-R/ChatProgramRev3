@@ -56,7 +56,7 @@ public class ClientReceive extends MsgControl {
                 break;
 
             case "2":
-                msgAll(parts[2]);
+                msgAll(parts[1], parts[2]);
                 break;
 
             case "3":
@@ -64,7 +64,7 @@ public class ClientReceive extends MsgControl {
                 break;
 
             case "4":
-                getClientsList();
+                clientsList(parts[2]);
                 break;
 
             case "5":
@@ -78,36 +78,56 @@ public class ClientReceive extends MsgControl {
 
     @Override
     void exit() {
+        try {
+            System.out.println("Server disconnected.");
+            socket.close();
+            System.exit(0);
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     void brokenMsg() {
+        if (++brokenMsgCount > 3) {
+            System.err.println("There is an issue with connecting to the server.");
+            exit();
 
+        } else {
+            out.println("The last message received could not be processed.");
+        }
     }
 
     @Override
     void msgServer(String message) {
-
+        String msgOut = "server(direct) > " + message;
+        out.println(msgOut);
     }
 
     @Override
-    void msgAll(String message) {
-
+    void msgAll(String name, String message) {
+        String msgOut = name + " > " + message;
+        out.println(msgOut);
     }
 
     @Override
     void msgDirect(String name, String message) {
-
+        String msgOut = name + "(direct) > " + message;
+        out.println(msgOut);
     }
 
     @Override
     void getClientsList() {
-
     }
 
     @Override
     void kick(String kickedBy, String toKick) {
+        out.println("You have been kicked from the chat.");
+        exit();
+    }
 
+    private void clientsList(String list) {
+        out.println(list);
     }
 }
