@@ -14,9 +14,9 @@ public class ClientThread extends MsgControl {
 
     @Override
     void processMsg(String message) {
-        String[] parts = message.split("~", 3);
+        String[] parts = message.split("~", 2);
         String identifier;
-        if (parts.length == 3) {
+        if (parts.length == 2) {
             identifier = parts[0];
         } else {
             identifier = "-1";
@@ -32,15 +32,15 @@ public class ClientThread extends MsgControl {
                 break;
 
             case "1":
-                msgServer(parts[2]);
+                msgServer(parts[1]);
                 break;
 
             case "2":
-                msgAll(parts[2]);
+                msgAll(parts[1]);
                 break;
 
             case "3":
-                msgDirect(parts[1], parts[2]);
+                msgDirect(name, parts[1]);
                 break;
 
             case "4":
@@ -48,7 +48,7 @@ public class ClientThread extends MsgControl {
                 break;
 
             case "5":
-                kick(parts[1], parts[2]);
+                kick(name, parts[1]);
                 break;
 
             default:
