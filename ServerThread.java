@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 
-public class ServerThread extends MsgControl {
+class ServerThread extends MsgControl {
 
     private ServerSocket server;
 
@@ -80,8 +80,6 @@ public class ServerThread extends MsgControl {
                 default:
                     brokenMsg();
             }
-
-
         } else if (message.equals("EXIT")) {
             exit();
 
@@ -166,7 +164,7 @@ public class ServerThread extends MsgControl {
         }
     }
 
-    void promote(String client) {
+    private void promote(String client) {
         if (clients.containsKey(client)) {
             if (admins.contains(client)) {
                 out.println("This user is already an admin.");
@@ -179,7 +177,7 @@ public class ServerThread extends MsgControl {
         }
     }
 
-    void demote(String client) {
+    private void demote(String client) {
         if (clients.containsKey(client)) {
             if (admins.contains(client)) {
                 admins.remove(client);
