@@ -92,6 +92,7 @@ public abstract class MsgControl implements Runnable {
                 input = in.readLine();
 
                 if (removeClients.remove(name)) {
+                    out.println("You have been kicked.");
                     return;
 
                 } else if (!endThread()) {
