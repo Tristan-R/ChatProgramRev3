@@ -29,11 +29,21 @@ public class ServerThread extends MsgControl {
 
             switch (parts[0]) {
                 case "/server":
-                    msgServer(parts[1]);
+                    if (parts.length == 2) {
+                        msgServer(parts[1]);
+
+                    } else {
+                        brokenMsg();
+                    }
                     break;
 
                 case "/direct":
-                    msgDirect(name, parts[1]);
+                    if (parts.length == 2) {
+                        msgDirect(name, parts[1]);
+
+                    } else {
+                        brokenMsg();
+                    }
                     break;
 
                 case "/clients":
@@ -41,15 +51,30 @@ public class ServerThread extends MsgControl {
                     break;
 
                 case "/kick":
-                    kick(name, parts[1]);
+                    if (parts.length == 2) {
+                        kick(name, parts[1]);
+
+                    } else {
+                        brokenMsg();
+                    }
                     break;
 
                 case "/promote":
-                    promote(parts[1]);
+                    if (parts.length == 2) {
+                        promote(parts[1]);
+
+                    } else {
+                        brokenMsg();
+                    }
                     break;
 
                 case "/demote":
-                    demote(parts[1]);
+                    if (parts.length == 2) {
+                        demote(parts[1]);
+
+                    } else {
+                        brokenMsg();
+                    }
                     break;
 
                 default:
