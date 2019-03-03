@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -29,11 +26,11 @@ public class ChatClient { // Need to send '/' commands first
         7 -
      */
 
-    private Socket server;
+    private Socket socket;
 
-    public ChatClient(String address, int port) {
+    private ChatClient(String address, int port) {
         try {
-            server = new Socket(address, port);
+            socket = new Socket(address, port);
 
         } catch (UnknownHostException e) {
             System.err.println("IP address could not be determined.");
@@ -43,32 +40,10 @@ public class ChatClient { // Need to send '/' commands first
         }
     }
 
-    public void begin() {
-        try {
-            BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
-            PrintWriter serverOut = new PrintWriter(server.getOutputStream(), true);
-            BufferedReader serverIn = new BufferedReader(new InputStreamReader(server.getInputStream()));
+    private void begin() {
+        new Thread(new ClientSend(socket)).start();
 
-            while (true) {
-                if (userIn.ready()) {
-                    String userInput = userIn.readLine();
-                    serverOut.println(userInput);
-                }
-                if (serverIn.ready()) {
-                    String serverRes = serverIn.readLine();
-                    System.out.println(serverRes);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        } finally {
-            try {
-                server.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        new Thread(new ClientReceive(socket)).start();
     }
 
     public static void main(String[] args) {
