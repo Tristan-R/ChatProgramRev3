@@ -11,23 +11,23 @@ import java.util.HashMap;
 // Messages will have the format: (identifier)~(name)~(message)
 public abstract class MsgControl implements Runnable {
 
-    protected String name;
+    String name;
 
-    protected Socket socket;
+    Socket socket;
 
-    protected BufferedReader in;
+    BufferedReader in;
 
-    protected PrintWriter out;
+    PrintWriter out;
 
     //Should I move server out and into own variable?
-    protected static HashMap<String, PrintWriter> clients = new HashMap<>();
+    static HashMap<String, PrintWriter> clients = new HashMap<>();
 
     // Used to add admins that can message the server (and maybe other privileges)
-    protected static ArrayList<String> admins = new ArrayList<>();
+    static ArrayList<String> admins = new ArrayList<>();
 
-    protected static ArrayList<String> removeClients = new ArrayList<>();
+    static ArrayList<String> removeClients = new ArrayList<>();
 
-    protected int brokenMsgCount = 0;
+    int brokenMsgCount = 0;
 
     abstract boolean endThread();
 
@@ -74,7 +74,7 @@ public abstract class MsgControl implements Runnable {
         }
     }
 
-    protected String msgBuilder(int msgType, String from, String message) {
+    String msgBuilder(int msgType, String from, String message) {
         return msgType + "~" + from + "~" + message;
     }
 
