@@ -61,7 +61,7 @@ public class ClientThread extends MsgControl {
         try {
             clients.remove(name);
             socket.close();
-            clients.get("server").println("Client has disconnected on " + socket.getLocalPort() + " : " + socket.getPort());
+            serverWriter.println("Client has disconnected on " + socket.getLocalPort() + " : " + socket.getPort());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -84,7 +84,7 @@ public class ClientThread extends MsgControl {
     @Override
     void msgServer(String message) {
         if (admins.contains(name)) {
-            clients.get("server").println(name + " > " + message);
+            serverWriter.println(name + " > " + message);
 
         } else {
             String returnMsg = msgBuilder(1, "server", "You do not have permission to do that.");
@@ -97,7 +97,7 @@ public class ClientThread extends MsgControl {
         String messageOut = msgBuilder(2, name, message);
 
         for (String client : clients.keySet()) {
-            if (!client.equals(name) && !client.equals("server")) {
+            if (!client.equals(name)) {
                 clients.get(client).println(messageOut);
             }
         }
@@ -123,12 +123,10 @@ public class ClientThread extends MsgControl {
         String list = "";
         int i = 1;
         for (String client : clients.keySet()) {
-            if (!client.equals("server")) {
-                list = list.concat("\t" + client);
+            list = list.concat("\t" + client);
 
-                if (++i % 4 == 0) {
-                    list = list.concat("\n");
-                }
+            if (++i % 4 == 0) {
+                list = list.concat("\n");
             }
         }
 
@@ -146,7 +144,6 @@ public class ClientThread extends MsgControl {
                 } else {
                     clients.remove(toKick);
                     removeClients.add(toKick);
-
                 }
             } else {
                 String messageOut = msgBuilder(1, "server", "This user does not exist.");
