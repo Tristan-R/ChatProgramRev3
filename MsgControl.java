@@ -41,7 +41,7 @@ public abstract class MsgControl implements Runnable {
 
     abstract void msgServer(String message);
 
-    abstract void msgAll(String message);
+    abstract void msgAll(String from, String message);
 
     abstract void msgDirect(String name, String message);
 
