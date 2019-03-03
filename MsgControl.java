@@ -31,6 +31,8 @@ public abstract class MsgControl implements Runnable {
 
     int brokenMsgCount = 0;
 
+    abstract void setName();
+
     abstract boolean endThread();
 
     abstract void processMsg(String message);
@@ -52,22 +54,11 @@ public abstract class MsgControl implements Runnable {
     MsgControl() {}
 
     MsgControl(Socket socket) {
-        this.socket = socket;
         try {
+            this.socket = socket;
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
-            /* Needs to go in run statement */
-            // Cannot include ~, <, >, : or ;
-            while (true) {
-                out.println("Please enter a username (max 15 characters):");
-                name = in.readLine();
-                // Need to improve for when the user enters a name already in use
-                // Should it allow spaces
-                if (name.length() <= 15) {
-                    clients.put(name, out);
-                    break;
-                }
-            }
+
         } catch (SocketException e) {
             System.err.println("Socket connection error.");
 
@@ -85,6 +76,8 @@ public abstract class MsgControl implements Runnable {
     }
 
     public void run() {
+        setName();
+
         try {
             String input;
 
