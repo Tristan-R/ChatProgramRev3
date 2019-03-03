@@ -1,4 +1,7 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -35,15 +38,35 @@ public class ChatClient { // Need to send '/' commands first
         } catch (UnknownHostException e) {
             System.err.println("IP address could not be determined.");
             System.exit(-1);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void begin() {
-        new Thread(new ClientSend(socket)).start();
+        try {
+            BufferedReader serverIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter serverOut = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
 
-        new Thread(new ClientReceive(socket)).start();
+            while (true) {
+                String in = serverIn.readLine();
+                if (in.equals("READY")) {
+                    break;
+                }
+                System.out.println(in);
+
+                String out = userIn.readLine();
+                serverOut.println(out);
+            }
+            new Thread(new ClientSend(socket, userIn, serverOut)).start();
+
+            new Thread(new ClientReceive(socket, serverIn)).start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
