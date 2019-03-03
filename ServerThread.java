@@ -84,7 +84,7 @@ class ServerThread extends MsgControl {
             exit();
 
         } else {
-            msgAll(message);
+            msgAll(name, message);
         }
     }
 
@@ -111,7 +111,7 @@ class ServerThread extends MsgControl {
     }
 
     @Override
-    void msgAll(String message) {
+    void msgAll(String from, String message) {
         String messageOut = msgBuilder(1, name, message);
 
         for (String client : clients.keySet()) {

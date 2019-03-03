@@ -37,7 +37,7 @@ public class ClientThread extends MsgControl {
                 break;
 
             case "2":
-                msgAll(parts[1]);
+                msgAll(name, parts[1]);
                 break;
 
             case "3":
@@ -94,7 +94,7 @@ public class ClientThread extends MsgControl {
     }
 
     @Override
-    void msgAll(String message) {
+    void msgAll(String name, String message) {
         String messageOut = msgBuilder(2, name, message);
 
         for (String client : clients.keySet()) {

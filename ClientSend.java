@@ -75,7 +75,7 @@ public class ClientSend extends MsgControl {
             exit();
 
         } else {
-            msgAll(message);
+            msgAll("null", message);
         }
     }
 
@@ -105,7 +105,7 @@ public class ClientSend extends MsgControl {
     }
 
     @Override
-    void msgAll(String message) {
+    void msgAll(String name, String message) {
         String msgOut = msgBuilder(2, message);
         out.println(msgOut);
     }
