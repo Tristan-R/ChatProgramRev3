@@ -138,21 +138,25 @@ class ServerThread extends MsgControl {
     void msgDirect(String name, String message) { //Should direct go on the name or message part?
         String[] parts = message.split(":", 2);
 
-        if (clients.containsKey(parts[0])) {
-            String messageOut = msgBuilder(1, name, parts[1]);
-            clients.get(parts[0]).println(messageOut);
+        if (parts.length == 2) {
+            if (clients.containsKey(parts[0])) {
+                String messageOut = msgBuilder(1, name, parts[1]);
+                clients.get(parts[0]).println(messageOut);
 
+            } else {
+                out.println("Could not find this user.");
+            }
         } else {
-            out.println("Could not find this user.");
+            brokenMsg();
         }
     }
 
     @Override
     void getClientsList() {
         String list = "";
-        int i = 1;
+        int i = 0;
         for (String client : clients.keySet()) {
-            list = list.concat("\t" + client);
+            list = list.concat("     " + client);
 
             if (admins.contains(client)) {
                 list = list.concat("(admin)");
