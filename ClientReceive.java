@@ -21,7 +21,7 @@ class ClientReceive extends MsgControl {
                  if (message.startsWith("READY")) {
                      String[] split = message.split(":");
                      name = split[1];
-                     out.println("Entering chat.");
+                     out.println("Entering chat.\n");
                      break;
                  }
                  out.println(message);
@@ -85,8 +85,8 @@ class ClientReceive extends MsgControl {
     @Override
     void exit() {
         try {
-            System.out.println("Input terminated.");
             socket.close();
+            System.out.println("Connection closed.");
             System.exit(0);
 
         } catch (IOException e) {

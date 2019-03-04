@@ -77,7 +77,6 @@ public class ClientSend extends MsgControl {
 
         try {
             socket.close();
-            System.out.println("Output terminated.");
 
         } catch (IOException e) {
             e.printStackTrace();
