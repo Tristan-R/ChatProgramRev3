@@ -50,16 +50,6 @@ public class ChatClient { // Need to send '/' commands first
             PrintWriter serverOut = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
 
-            while (true) {
-                String in = serverIn.readLine();
-                if (in.equals("READY")) {
-                    break;
-                }
-                System.out.println(in);
-
-                String out = userIn.readLine();
-                serverOut.println(out);
-            }
             new Thread(new ClientSend(socket, userIn, serverOut)).start();
 
             new Thread(new ClientReceive(socket, serverIn)).start();
