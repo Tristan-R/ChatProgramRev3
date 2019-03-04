@@ -158,8 +158,11 @@ class ServerThread extends MsgControl {
     @Override
     void kick(String kickedBy, String toKick) {
         if (clients.containsKey(toKick)) {
-            clients.remove(toKick);
-            removeClients.add(toKick);
+            PrintWriter kickClient = clients.remove(toKick);
+            admins.remove(toKick);
+            String removeMsg = msgBuilder(5, "server", "null");
+            kickClient.println(removeMsg);
+            kickModify("Add", toKick);
 
         } else {
             out.println("Could not find this user.");

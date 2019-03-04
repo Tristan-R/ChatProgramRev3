@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 // Messages will have the format: (identifier)~(name)~(message)
@@ -19,8 +19,7 @@ public abstract class MsgControl implements Runnable {
 
     PrintWriter out;
 
-    //Should I move server out and into own variable?
-    static HashMap<String, PrintWriter> clients = new HashMap<>();
+    static ConcurrentHashMap<String, PrintWriter> clients = new ConcurrentHashMap<>();
 
     static PrintWriter serverWriter;
 
@@ -30,6 +29,18 @@ public abstract class MsgControl implements Runnable {
     static ArrayList<String> removeClients = new ArrayList<>();
 
     int brokenMsgCount = 0;
+
+    synchronized void kickModify(String operation, String name) {
+        if (operation.equals("Add")) {
+            removeClients.add(name);
+        } else if (operation.equals("Remove")) {
+            removeClients.remove(name);
+        }
+    }
+
+    synchronized boolean kickSearch(String name) {
+        return removeClients.contains(name);
+    }
 
     abstract void setName();
 
@@ -84,9 +95,8 @@ public abstract class MsgControl implements Runnable {
             while (!endThread()) {
                 input = in.readLine();
 
-                if (removeClients.remove(name)) {
-                    String msgOut = msgBuilder(5, "server", "You have been kicked.");
-                    out.println(msgOut);
+                if (kickSearch(name)) {
+                    kickModify("Remove", name);
                     return;
 
                 } else if (!endThread()) {

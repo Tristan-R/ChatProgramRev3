@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientThread extends MsgControl {
@@ -172,8 +173,10 @@ public class ClientThread extends MsgControl {
                     out.println(messageOut);
 
                 } else {
-                    clients.remove(toKick);
-                    removeClients.add(toKick);
+                    PrintWriter kickClient = clients.remove(toKick);
+                    String removeMsg = msgBuilder(5, "server", "null");
+                    kickClient.println(removeMsg);
+                    kickModify("Add", toKick);
                 }
             } else {
                 String messageOut = msgBuilder(1, "server", "This user does not exist.");
