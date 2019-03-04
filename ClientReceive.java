@@ -13,7 +13,24 @@ class ClientReceive extends MsgControl {
 
     @Override
     void setName() {
+        String message;
+        try {
+            while (true) {
+                 message = in.readLine();
+
+                 if (message.startsWith("READY")) {
+                     String[] split = message.split(":");
+                     name = split[1];
+                     out.println("Entering chat.");
+                     break;
+                 }
+                 out.println(message);
+            }
+        } catch (IOException e) {
+            System.err.println("Connection terminated.");
+            exit();
         }
+    }
 
     @Override
     boolean endThread() {
