@@ -116,7 +116,7 @@ class ServerThread extends MsgControl {
 
     @Override
     void msgAll(String from, String message) {
-        String messageOut = msgBuilder(1, name, message);
+        String messageOut = msgBuilder(2, name, message);
 
         for (String client : clients.keySet()) {
             clients.get(client).println(messageOut);
@@ -128,7 +128,7 @@ class ServerThread extends MsgControl {
         String[] parts = message.split(":", 2);
 
         if (clients.containsKey(parts[0])) {
-            String messageOut = msgBuilder(1, name + "(direct)", parts[1]);
+            String messageOut = msgBuilder(1, name, parts[1]);
             clients.get(parts[0]).println(messageOut);
 
         } else {
