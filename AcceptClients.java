@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class AcceptClients implements Runnable {
 
@@ -18,6 +19,10 @@ public class AcceptClients implements Runnable {
                 ClientThread client = new ClientThread(s);
                 Thread thread = new Thread(client);
                 thread.start();
+            }
+        } catch (SocketException e) {
+            if (!server.isClosed()) {
+                System.err.println("Fatal connection error.");
             }
         } catch (IOException e) {
             e.printStackTrace();
