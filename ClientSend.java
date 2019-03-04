@@ -5,6 +5,8 @@ import java.net.Socket;
 
 public class ClientSend extends MsgControl {
 
+    private boolean shutdown = false;
+
     ClientSend(Socket socket, BufferedReader in, PrintWriter out) {
             this.socket = socket;
             this.in = in;
@@ -17,7 +19,7 @@ public class ClientSend extends MsgControl {
 
     @Override
     boolean endThread() {
-        return socket.isClosed();
+        return socket.isClosed() || shutdown;
     }
 
     @Override
@@ -61,7 +63,7 @@ public class ClientSend extends MsgControl {
                     brokenMsg();
             }
         } else if (message.equals("EXIT")) {
-            exit();
+            shutdown = true;
 
         } else {
             msgAll("null", message);
@@ -75,7 +77,7 @@ public class ClientSend extends MsgControl {
 
         try {
             socket.close();
-            System.out.println("Disconnected from server.");
+            System.out.println("Output terminated.");
 
         } catch (IOException e) {
             e.printStackTrace();

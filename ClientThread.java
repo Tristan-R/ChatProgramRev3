@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ClientThread extends MsgControl {
+class ClientThread extends MsgControl {
 
     ClientThread(Socket socket) {
         super(socket);
@@ -59,7 +59,12 @@ public class ClientThread extends MsgControl {
                 break;
 
             case "0":
-                exit();
+                try {
+                    socket.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
 
             case "1":

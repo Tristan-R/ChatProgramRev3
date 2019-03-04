@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ClientReceive extends MsgControl {
+class ClientReceive extends MsgControl {
 
     ClientReceive(Socket socket, BufferedReader in) {
             this.socket = socket;
@@ -68,7 +68,7 @@ public class ClientReceive extends MsgControl {
     @Override
     void exit() {
         try {
-            System.out.println("Server disconnected.");
+            System.out.println("Input terminated.");
             socket.close();
             System.exit(0);
 
