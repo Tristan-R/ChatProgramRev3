@@ -107,7 +107,6 @@ public abstract class MsgControl implements Runnable {
             if (!endThread()) {
                 System.err.println("Connection error.");
             }
-
         } catch (IOException e) {
             e.printStackTrace();
 
