@@ -12,24 +12,33 @@ class ClientThread extends MsgControl {
     void setName() {
         try {
             String testName;
+            String message;
             while (true) {
                 out.println("Please enter a username (max 15 characters):");
-                testName = in.readLine();
-                if (testName.length() <= 15) {
-                    if (testName.matches("[~<>:;]")) {
-                        out.println("Name must not contain ~ < > : ;");
+                message = in.readLine();
+                String[] parts = message.split("~", 2);
 
-                    } else {
-                        if (clients.containsKey(testName)) {
-                            out.println("Name already in use.");
+                if (parts.length == 2 && parts[0].equals("2")) {
+                    testName = parts[1];
+
+                    if (testName.length() <= 15) {
+                        if (testName.matches("(.*)[~<>:;](.*)")) {
+                            out.println("Name must not contain ~ < > : ;");
 
                         } else {
-                            name = testName;
-                            clients.put(name, out);
-                            out.println("READY");
-                            break;
+                            if (clients.containsKey(testName)) {
+                                out.println("Name already in use.");
+
+                            } else {
+                                name = testName;
+                                clients.put(name, out);
+                                out.println("READY:" + name);
+                                break;
+                            }
                         }
                     }
+                } else {
+                    out.println("Invalid name.");
                 }
             }
         } catch (IOException e) {
