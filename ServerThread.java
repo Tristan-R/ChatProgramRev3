@@ -95,11 +95,22 @@ class ServerThread extends MsgControl {
     @Override
     void exit() {
         try {
+            for (String client : clients.keySet()) {
+                PrintWriter clientOut = clients.remove(client);
+                admins.remove(client);
+                String removeMsg = msgBuilder(0, "server", "null");
+                clientOut.println(removeMsg);
+                kickModify("Add", client);
+            }
+            Thread.sleep(5000);
             server.close();
             out.println("Server disconnected.");
 
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+
+        } finally {
+            System.exit(0);
         }
 
     }
