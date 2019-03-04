@@ -152,14 +152,17 @@ class ClientThread extends MsgControl {
     @Override
     void msgDirect(String name, String message) {
         String[] parts = message.split(":", 2);
+        if (parts.length == 2) {
+            if (clients.containsKey(parts[0])) {
+                String messageOut = msgBuilder(3, name, parts[1]);
+                clients.get(parts[0]).println(messageOut);
 
-        if (clients.containsKey(parts[0])) {
-            String messageOut = msgBuilder(3, name, parts[1]);
-            clients.get(parts[0]).println(messageOut);
-
+            } else {
+                String messageOut = msgBuilder(1, "server", "There is not a user with this name.");
+                out.println(messageOut);
+            }
         } else {
-            String messageOut = msgBuilder(1, "server", "There is not a user with this name.");
-            out.println(messageOut);
+            brokenMsg();
         }
     }
 
