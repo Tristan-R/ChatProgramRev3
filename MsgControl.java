@@ -26,7 +26,7 @@ public abstract class MsgControl implements Runnable {
     // Used to add admins that can message the server (and maybe other privileges)
     static ArrayList<String> admins = new ArrayList<>();
 
-    static ArrayList<String> removeClients = new ArrayList<>();
+    private static ArrayList<String> removeClients = new ArrayList<>();
 
     int brokenMsgCount = 0;
 
@@ -38,7 +38,7 @@ public abstract class MsgControl implements Runnable {
         }
     }
 
-    synchronized boolean kickSearch(String name) {
+    private synchronized boolean kickSearch(String name) {
         return removeClients.contains(name);
     }
 
@@ -104,7 +104,9 @@ public abstract class MsgControl implements Runnable {
                 }
             }
         } catch (SocketException e) {
-            System.err.println("Connection error.");
+            if (!endThread()) {
+                System.err.println("Connection error.");
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
