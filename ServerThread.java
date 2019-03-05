@@ -81,6 +81,15 @@ class ServerThread extends MsgControl {
                     }
                     break;
 
+                case "/broadcast":
+                    if (parts.length == 2) {
+                        msgAll(name, parts[1]);
+
+                    } else {
+                        brokenMsg();
+                    }
+                    break;
+
                 default:
                     brokenMsg();
             }
@@ -88,13 +97,15 @@ class ServerThread extends MsgControl {
             exit();
 
         } else {
-            msgAll(name, message);
+            brokenMsg();
         }
     }
 
     @Override
     void exit() {
         try {
+            msgAll("server", "Server shutting down.");
+            Thread.sleep(1000);
             for (String client : clients.keySet()) {
                 PrintWriter clientOut = clients.remove(client);
                 admins.remove(client);
@@ -102,9 +113,9 @@ class ServerThread extends MsgControl {
                 clientOut.println(removeMsg);
                 kickModify("Add", client);
             }
-            Thread.sleep(5000);
             server.close();
             out.println("Server disconnected.");
+            Thread.sleep(2000);
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -140,7 +151,7 @@ class ServerThread extends MsgControl {
 
         if (parts.length == 2) {
             if (clients.containsKey(parts[0])) {
-                String messageOut = msgBuilder(1, name, parts[1]);
+                String messageOut = msgBuilder(3, name, parts[1]);
                 clients.get(parts[0]).println(messageOut);
 
             } else {
