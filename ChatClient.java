@@ -6,8 +6,11 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 /**
- * Contains the launch code for the chat client.
- *
+ * <h1>Launcher for Chat Client</h1>
+ * This launcher will start the chat client and connect to a server.
+ * <p>
+ * The client supports simultaneous processing of sending and receiving
+ * messages.
  */
 public class ChatClient {
     /*
