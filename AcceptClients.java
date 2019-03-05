@@ -7,7 +7,7 @@ public class AcceptClients implements Runnable {
 
     private ServerSocket server;
 
-    public AcceptClients(ServerSocket server) {
+    AcceptClients(ServerSocket server) {
         this.server = server;
     }
 

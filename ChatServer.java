@@ -5,7 +5,7 @@ public class ChatServer {
 
     private ServerSocket server;
 
-    public ChatServer(int port) {
+    private ChatServer(int port) {
         try {
             server = new ServerSocket(port);
             System.out.println("Server started on port " + server.getLocalPort());
@@ -16,7 +16,7 @@ public class ChatServer {
         }
     }
 
-    public void begin() {
+    private void begin() {
         new Thread(new AcceptClients(server)).start();
 
         new Thread(new ServerThread(server)).start();

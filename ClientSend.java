@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ClientSend extends MsgControl {
+class ClientSend extends MsgControl {
 
     private boolean shutdown = false;
 
