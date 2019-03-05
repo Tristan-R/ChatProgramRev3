@@ -4,10 +4,24 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 
+/**
+ * ServerThread Object
+ * <p>
+ * Handles user input from on the server side.
+ */
 class ServerThread extends MsgControl {
 
+    /**
+     * Stores the socket that the server is running on.
+     */
     private ServerSocket server;
 
+    /**
+     * Constructor. Creates a new user input stream and an output stream.
+     *
+     * @param server
+     *      The socket that the server is connected on.
+     */
     ServerThread(ServerSocket server) {
         this.server = server;
         in = new BufferedReader(new InputStreamReader(System.in));
@@ -15,17 +29,30 @@ class ServerThread extends MsgControl {
         serverWriter = out;
     }
 
+    /**
+     * Sets the name of the server.
+     */
     @Override
     void setName() {
         name = "server";
         admins.add(name);
     }
 
+    /**
+     * @return
+     *      Whether to end the thread.
+     */
     @Override
     boolean endThread() {
         return server.isClosed();
     }
 
+    /**
+     * Processes user input.
+     *
+     * @param message
+     *      The user input message to process.
+     */
     @Override
     void processMsg(String message) {
         if (message.startsWith("/")) {
@@ -101,6 +128,10 @@ class ServerThread extends MsgControl {
         }
     }
 
+    /**
+     * Attempts to close all clients, closes the ServerSocket then exits the
+     * program.
+     */
     @Override
     void exit() {
         try {
@@ -115,7 +146,7 @@ class ServerThread extends MsgControl {
             }
             server.close();
             out.println("Server disconnected.");
-            Thread.sleep(2000);
+            Thread.sleep(2000); // Pause to allow all client threads to end.
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -126,16 +157,34 @@ class ServerThread extends MsgControl {
 
     }
 
+    /**
+     * Informs the user if the command they entered could not be processed.
+     */
     @Override
     void brokenMsg() {
         out.println("Your last message could not be processed.");
     }
 
+    /**
+     * Prints a message from the user.
+     *
+     * @param message
+     *      The message to print.
+     */
     @Override
     void msgServer(String message) {
         out.println(message);
     }
 
+    /**
+     * Sends a message to all clients.
+     *
+     * @param from
+     *      The server's name.
+     *
+     * @param message
+     *      The message to send to all clients.
+     */
     @Override
     void msgAll(String from, String message) {
         String messageOut = msgBuilder(2, name, message);
@@ -145,8 +194,18 @@ class ServerThread extends MsgControl {
         }
     }
 
+    /**
+     * Sends a message to a single client.
+     *
+     * @param name
+     *      The server's name.
+     *
+     * @param message
+     *      The client to send the message to and the message to be sent to the
+     *      client in the format: (client):(message)
+     */
     @Override
-    void msgDirect(String name, String message) { //Should direct go on the name or message part?
+    void msgDirect(String name, String message) {
         String[] parts = message.split(":", 2);
 
         if (parts.length == 2) {
@@ -162,6 +221,10 @@ class ServerThread extends MsgControl {
         }
     }
 
+    /**
+     * Prints a list of all clients connected to the server and specifies admin
+     * if that client is an admin.
+     */
     @Override
     void getClientsList() {
         String list = "";
@@ -181,6 +244,15 @@ class ServerThread extends MsgControl {
         out.println(list);
     }
 
+    /**
+     * Removes a client from the server.
+     *
+     * @param kickedBy
+     *      The server's name.
+     *
+     * @param toKick
+     *      The client to be removed from the server.
+     */
     @Override
     void kick(String kickedBy, String toKick) {
         if (clients.containsKey(toKick)) {
@@ -195,6 +267,12 @@ class ServerThread extends MsgControl {
         }
     }
 
+    /**
+     * Promotes a client to admin status.
+     *
+     * @param client
+     *      The client to promote.
+     */
     private void promote(String client) {
         if (clients.containsKey(client)) {
             if (admins.contains(client)) {
@@ -208,6 +286,12 @@ class ServerThread extends MsgControl {
         }
     }
 
+    /**
+     * Demotes a client from admin status.
+     *
+     * @param client
+     *      The client to demote.
+     */
     private void demote(String client) {
         if (clients.containsKey(client)) {
             if (admins.contains(client)) {
