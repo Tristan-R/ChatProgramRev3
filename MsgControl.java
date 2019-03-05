@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 // Messages will have the format: (identifier)~(name)~(message)
 public abstract class MsgControl implements Runnable {
 
-    String name;
+    String name = "unassigned";
 
     Socket socket;
 
@@ -105,7 +105,7 @@ public abstract class MsgControl implements Runnable {
             }
         } catch (SocketException e) {
             if (!endThread()) {
-                System.err.println("Connection error.");
+                System.err.println("Connection to socket lost.");
             }
         } catch (IOException e) {
             e.printStackTrace();

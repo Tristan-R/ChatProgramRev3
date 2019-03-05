@@ -1,8 +1,11 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 class ClientThread extends MsgControl {
+
+    private boolean shutdown = false;
 
     ClientThread(Socket socket) {
         super(socket);
@@ -41,6 +44,11 @@ class ClientThread extends MsgControl {
                     out.println("Invalid name.");
                 }
             }
+        } catch (SocketException e) {
+            if (!endThread()) {
+                System.err.println("Connection to socket lost.");
+                shutdown = true;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,7 +56,7 @@ class ClientThread extends MsgControl {
 
     @Override
     boolean endThread() {
-        return socket.isClosed();
+        return socket.isClosed() || shutdown;
     }
 
     @Override
