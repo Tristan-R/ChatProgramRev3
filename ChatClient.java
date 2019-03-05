@@ -5,6 +5,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/**
+ * Contains the launch code for the chat client.
+ *
+ */
 public class ChatClient {
     /*
     Sending Commands:
@@ -24,8 +28,21 @@ public class ChatClient {
         5 - Kick command
      */
 
+    /**
+     * Store the socket that the client is connected on.
+     */
     private Socket socket;
 
+    /**
+     * Constructor. Connects the client to the server on the specified IP
+     * address and port.
+     *
+     * @param address
+     *      The IP address to attempt a connection on.
+     *
+     * @param port
+     *      The port to attempt a connection on.
+     */
     private ChatClient(String address, int port) {
         try {
             socket = new Socket(address, port);
@@ -39,6 +56,10 @@ public class ChatClient {
         }
     }
 
+    /**
+     * Starts a new thread for receiving user input and sending to the server
+     * and a new thread for receiving from the server.
+     */
     private void begin() {
         try {
             BufferedReader serverIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -54,9 +75,17 @@ public class ChatClient {
         }
     }
 
+    /**
+     * This is the main method that checks for a new port number and IP address
+     * if specified on the command line at launch.
+     *
+     * @param args
+     *      Used to change the port number if -ccp flag is entered and the IP
+     *      address if -cca flag is entered.
+     */
     public static void main(String[] args) {
         String address = "localhost";
-        int port = 14001;
+        int portNumber = 14001;
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-cca")) {
                 if (i + 1 < args.length) {
@@ -68,7 +97,7 @@ public class ChatClient {
             } else if (args[i].equals("-ccp")) {
                 if (i + 1 < args.length) {
                     try {
-                        port = Integer.parseInt(args[i + 1]);
+                        portNumber = Integer.parseInt(args[i + 1]);
 
                     } catch (NumberFormatException e) {
                         System.err.println("Error in port number.");
@@ -80,7 +109,7 @@ public class ChatClient {
                 }
             }
         }
-        System.out.println("Connected to server on : " + address + " ; " + port);
-        new ChatClient(address, port).begin();
+        System.out.println("Connected to server on : " + address + " ; " + portNumber);
+        new ChatClient(address, portNumber).begin();
     }
 }
