@@ -112,7 +112,7 @@ public class ChatClient {
                 }
             }
         }
-        System.out.println("Connected to server on : " + address + " ; " + portNumber);
+        System.out.println("Connecting to server on : " + address + " ; " + portNumber);
         new ChatClient(address, portNumber).begin();
     }
 }
