@@ -27,7 +27,7 @@ class ClientReceive extends MsgControl {
                  out.println(message);
             }
         } catch (IOException e) {
-            System.err.println("Connection terminated.");
+            System.err.println("Connection to server lost.");
             exit();
         }
     }
@@ -107,8 +107,7 @@ class ClientReceive extends MsgControl {
 
     @Override
     void msgServer(String message) {
-        String msgOut = "server(direct) > " + message;
-        out.println(msgOut);
+        out.println(message);
     }
 
     @Override
