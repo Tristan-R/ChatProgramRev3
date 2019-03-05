@@ -112,7 +112,9 @@ class ClientThread extends MsgControl {
     @Override
     void exit() {
         try {
-            clients.remove(name);
+            if (name != null) {
+                clients.remove(name);
+            }
             socket.close();
             serverWriter.println("Client has disconnected on " + socket.getLocalPort() + " : " + socket.getPort());
 
