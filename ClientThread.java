@@ -3,14 +3,33 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 
+/**
+ * ClientThread Object
+ * <p>
+ * Handles messages from clients on the server side.
+ */
 class ClientThread extends MsgControl {
 
+    /**
+     * Stores whether the thread should end.
+     */
     private boolean shutdown = false;
 
+    /**
+     * Constructor.
+     *
+     * @param socket
+     *      The socket that the client is connected on.
+     */
     ClientThread(Socket socket) {
         super(socket);
     }
 
+    /**
+     * Asks the client for a name and sets the name. Names must not be taken by
+     * another client and they must not exceed 15 characters or contain any of
+     * the characters: ~ < > : ;
+     */
     @Override
     void setName() {
         try {
@@ -54,11 +73,22 @@ class ClientThread extends MsgControl {
         }
     }
 
+    /**
+     * @return
+     *      Whether to end the thread.
+     */
     @Override
     boolean endThread() {
         return socket.isClosed() || shutdown;
     }
 
+    /**
+     * Processes input from the client.
+     *
+     * @param message
+     *      The message received from the client. The input will be in the
+     *      form: (identifier)~(message)
+     */
     @Override
     void processMsg(String message) {
         String[] parts = message.split("~", 2);
@@ -109,6 +139,10 @@ class ClientThread extends MsgControl {
         }
     }
 
+    /**
+     * Closes the socket, removes the client from the clients list and exits
+     * the program.
+     */
     @Override
     void exit() {
         try {
@@ -123,6 +157,11 @@ class ClientThread extends MsgControl {
         }
     }
 
+    /**
+     * Informs the client if the message they sent could not be processed.
+     * On the fourth failed message the connection will be terminated due to
+     * a weak connection.
+     */
     @Override
     void brokenMsg() {
         if (++brokenMsgCount > 3) {
@@ -136,6 +175,12 @@ class ClientThread extends MsgControl {
         }
     }
 
+    /**
+     * Prints a message to serverWriter if the client is an admin.
+     *
+     * @param message
+     *      The message to print to the server.
+     */
     @Override
     void msgServer(String message) {
         if (admins.contains(name)) {
@@ -147,6 +192,15 @@ class ClientThread extends MsgControl {
         }
     }
 
+    /**
+     * Sends a message to all clients.
+     *
+     * @param name
+     *      The name of the client sending the message.
+     *
+     * @param message
+     *      The message to be sent.
+     */
     @Override
     void msgAll(String name, String message) {
         String messageOut = msgBuilder(2, name, message);
@@ -158,7 +212,16 @@ class ClientThread extends MsgControl {
         }
     }
 
-    // message will have format (toUser)>(message)
+    /**
+     * Sends a message to a single client.
+     *
+     * @param name
+     *      The name of the client who sent the message.
+     *
+     * @param message
+     *      The client to send the message to and the message to be sent to the
+     *      client in the format: (client):(message)
+     */
     @Override
     void msgDirect(String name, String message) {
         String[] parts = message.split(":", 2);
@@ -176,6 +239,9 @@ class ClientThread extends MsgControl {
         }
     }
 
+    /**
+     * Returns a list of all clients connected to the server.
+     */
     @Override
     void getClientsList() {
         String list = "";
@@ -191,6 +257,16 @@ class ClientThread extends MsgControl {
         out.println(messageOut);
     }
 
+    /**
+     * Removes a client from the server if the client requesting the action is
+     * an admin.
+     *
+     * @param kickedBy
+     *      The client that removed the other client.
+     *
+     * @param toKick
+     *      The client to be removed.
+     */
     @Override
     void kick(String kickedBy, String toKick) {
         if (admins.contains(name)) {
