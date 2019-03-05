@@ -58,12 +58,10 @@ class ClientReceive extends MsgControl {
     }
 
     /**
-     * Processes user input.
+     * Processes messages received from the server.
      *
      * @param message
-     *      The user input message to process. All commands start with a /
-     *      except for EXIT and global messages that start don't start with
-     *      any prefix.
+     *      The message to be processed.
      */
     @Override
     void processMsg(String message) {
