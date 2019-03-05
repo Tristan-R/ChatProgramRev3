@@ -16,7 +16,7 @@ public class ChatServer {
     private ServerSocket server;
 
     /**
-     * Constructor.
+     * Constructor. Starts the server running on the specified port.
      *
      * @param port
      *      The port to start the server on.
