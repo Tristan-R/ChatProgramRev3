@@ -3,14 +3,30 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * ClientReceive Object
+ * <p>
+ * Handles messages received from the server in the client side.
+ */
 class ClientReceive extends MsgControl {
 
+    /**
+     * Constructor.
+     *
+     * @param socket
+     *      The socket that the client is connected on.
+     * @param in
+     *      The BufferedReader object that receives messages from the server.
+     */
     ClientReceive(Socket socket, BufferedReader in) {
             this.socket = socket;
             this.in = in;
             out = new PrintWriter(System.out, true);
     }
 
+    /**
+     * Sets the name of the client.
+     */
     @Override
     void setName() {
         String message;
@@ -32,11 +48,23 @@ class ClientReceive extends MsgControl {
         }
     }
 
+    /**
+     * @return
+     *      Whether to end the thread.
+     */
     @Override
     boolean endThread() {
         return socket.isClosed();
     }
 
+    /**
+     * Processes user input.
+     *
+     * @param message
+     *      The user input message to process. All commands start with a /
+     *      except for EXIT and global messages that start don't start with
+     *      any prefix.
+     */
     @Override
     void processMsg(String message) {
         String[] parts = message.split("~", 3);
@@ -82,6 +110,9 @@ class ClientReceive extends MsgControl {
         }
     }
 
+    /**
+     * Closes the socket and exits the program.
+     */
     @Override
     void exit() {
         try {
@@ -94,6 +125,11 @@ class ClientReceive extends MsgControl {
         }
     }
 
+    /**
+     * Informs the user if the last message they received could not be
+     * processed and on the fourth failed message the connection to the server
+     * is terminated due to a weak connection.
+     */
     @Override
     void brokenMsg() {
         if (++brokenMsgCount > 3) {
@@ -105,33 +141,75 @@ class ClientReceive extends MsgControl {
         }
     }
 
+    /**
+     * Prints a message received from the server.
+     *
+     * @param message
+     *      The message received from the server.
+     */
     @Override
     void msgServer(String message) {
         out.println(message);
     }
 
+    /**
+     * Prints a global message.
+     *
+     * @param name
+     *      The user that sent the global message.
+     *
+     * @param message
+     *      The global message.
+     */
     @Override
     void msgAll(String name, String message) {
         String msgOut = name + " > " + message;
         out.println(msgOut);
     }
 
+    /**
+     * Prints a direct message.
+     *
+     * @param name
+     *      The client who sent the message.
+     *
+     * @param message
+     *      The direct message received.
+     */
     @Override
     void msgDirect(String name, String message) {
         String msgOut = name + "(direct) > " + message;
         out.println(msgOut);
     }
 
+    /**
+     * Unused.
+     */
     @Override
     void getClientsList() {
     }
 
+    /**
+     * Informs the user they have been kicked and then calls the exit method.
+     *
+     * @param kickedBy
+     *      The client that removed the other client.
+     *
+     * @param toKick
+     *      The client being kicked.
+     */
     @Override
     void kick(String kickedBy, String toKick) {
         out.println("You have been kicked from the chat.");
         exit();
     }
 
+    /**
+     * Prints a list of clients.
+     *
+     * @param list
+     *      The list of clients on the server.
+     */
     private void clientsList(String list) {
         out.println(list);
     }
