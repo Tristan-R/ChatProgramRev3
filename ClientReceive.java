@@ -6,7 +6,7 @@ import java.net.Socket;
 /**
  * ClientReceive Object
  * <p>
- * Handles messages received from the server in the client side.
+ * Handles receiving messages from the server.
  */
 class ClientReceive extends MsgControl {
 
