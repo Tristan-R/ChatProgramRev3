@@ -51,7 +51,8 @@ class ServerThread extends MsgControl {
      * Processes user input.
      *
      * @param message
-     *      The user input message to process.
+     *      The user input message to process. All commands start with a /
+     *      except for EXIT.
      */
     @Override
     void processMsg(String message) {
