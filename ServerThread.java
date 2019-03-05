@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 /**
  * ServerThread Object
  * <p>
- * Handles user input from on the server side.
+ * Handles user input on the server side.
  */
 class ServerThread extends MsgControl {
 
