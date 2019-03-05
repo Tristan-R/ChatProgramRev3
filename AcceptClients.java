@@ -3,14 +3,32 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+/**
+ * AcceptClients object
+ * <p>
+ * Accepts connections from clients and adds them to the chat.
+ */
 public class AcceptClients implements Runnable {
 
+    /**
+     * Stores the socket that the server is running on.
+     */
     private ServerSocket server;
 
+    /**
+     * Constructor.
+     *
+     * @param server
+     *      The socket that the server is running on.
+     */
     AcceptClients(ServerSocket server) {
         this.server = server;
     }
 
+    /**
+     * Waits for a new client to connect and then it will create a new
+     * ClientThread object for it.
+     */
     public void run() {
         try {
             while (true) {
