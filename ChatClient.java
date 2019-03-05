@@ -69,6 +69,7 @@ public class ChatClient {
                 if (i + 1 < args.length) {
                     try {
                         port = Integer.parseInt(args[i + 1]);
+
                     } catch (NumberFormatException e) {
                         System.err.println("Error in port number.");
                         System.exit(-1);
