@@ -31,4 +31,4 @@ Here is a list of all the available commands:
 
     /promote (client)           Promotes a client to admin status.
 
-    /demote (client)            Demotes a clients from admin status.
+    /demote (client)            Demotes a client from admin status.
