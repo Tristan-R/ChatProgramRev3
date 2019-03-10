@@ -4,7 +4,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -47,15 +46,15 @@ public abstract class MsgControl implements Runnable {
     static PrintWriter serverWriter;
 
     /**
-     * Stores a list of admins that have access to kick and message server
+     * An object for storing admins that have access to kick and message server
      * functions.
      */
-    static ArrayList<String> admins = new ArrayList<>();
+    static AdminStore admins = new AdminStore();
 
     /**
-     * A list of clients that have been kicked before their sockets are closed.
+     * An object for storing clients to be kicked.
      */
-    private static ArrayList<String> removeClients = new ArrayList<>();
+    static RemoveClientStore removeClients = new RemoveClientStore();
 
     /**
      * The number of messages received from the input that could not be
@@ -169,36 +168,6 @@ public abstract class MsgControl implements Runnable {
     }
 
     /**
-     * Synchronised method for adding or removing a client from the list of
-     * removed clients.
-     *
-     * @param operation
-     *      Identifies whether a client is to be added or removed.
-     *
-     * @param name
-     *      The name of the client to be added or removed.
-     */
-    synchronized void kickModify(String operation, String name) {
-        if (operation.equals("Add")) {
-            removeClients.add(name);
-        } else if (operation.equals("Remove")) {
-            removeClients.remove(name);
-        }
-    }
-
-    /**
-     * Synchronised method to check if a client needs to be kicked.
-     * @param name
-     *      The client name to search for.
-     *
-     * @return
-     *      Whether the client is in the list of kicked clients.
-     */
-    private synchronized boolean kickSearch(String name) {
-        return removeClients.contains(name);
-    }
-
-    /**
      * Builds a message in the correct format to send to a client.
      *
      * @param msgType
@@ -249,8 +218,8 @@ public abstract class MsgControl implements Runnable {
             while (!endThread()) {
                 input = in.readLine();
 
-                if (kickSearch(name)) {
-                    kickModify("Remove", name);
+                if (removeClients.kickSearch(name)) {
+                    removeClients.kickModify("Remove", name);
                     return;
 
                 } else if (!endThread()) {
