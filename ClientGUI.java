@@ -9,14 +9,37 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * <h1>Launcher for Client GUI</h1>
+ * This launcher will start the client GUI when called.
+ */
 public class ClientGUI extends Application {
 
+    /**
+     * Stores the socket that the client is connected on.
+     */
     private static Socket socket;
 
+    /**
+     * Stores the socket input stream.
+     */
     private static BufferedReader socketIn;
 
+    /**
+     * Stores the socket output stream.
+     */
     private static PrintWriter socketOut;
 
+    /**
+     * Builds and launches the GUI.
+     *
+     * @param primaryStage
+     *      The primary stage for this application, onto which
+     *      the application scene can be set.
+     *
+     * @throws Exception
+     *      If an error occurs.
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("ClientGUI.fxml"));
@@ -26,30 +49,59 @@ public class ClientGUI extends Application {
         primaryStage.show();
     }
 
-    public void shutdown() {
+    /**
+     * The procedure to follow when the window is closed.
+     */
+    private void shutdown() {
         try {
             socketOut.println("0~null");
             socket.close();
+
         } catch (IOException e) {
             e.printStackTrace();
+
         } finally {
             System.exit(0);
         }
     }
 
+    /**
+     * @return
+     *      The socket that the client is connected on.
+     */
     public static Socket getSocket() {
         return socket;
     }
 
-    public static BufferedReader getSocketIn() {
+    /**
+     * @return
+     *      The socket input stream.
+     */
+    static BufferedReader getSocketIn() {
         return socketIn;
     }
 
-    public static PrintWriter getSocketOut() {
+    /**
+     * @return
+     *      The socket output stream.
+     */
+    static PrintWriter getSocketOut() {
         return socketOut;
     }
 
-    public static void begin(Socket clientSocket, BufferedReader in, PrintWriter out) {
+    /**
+     * Launches the GUI application.
+     *
+     * @param clientSocket
+     *      The socket the client is connected on.
+     *
+     * @param in
+     *      The socket input stream.
+     *
+     * @param out
+     *      The socket output stream.
+     */
+    static void begin(Socket clientSocket, BufferedReader in, PrintWriter out) {
         socket = clientSocket;
         socketIn = in;
         socketOut = out;
