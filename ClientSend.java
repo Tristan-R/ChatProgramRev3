@@ -11,6 +11,16 @@ import java.net.Socket;
 class ClientSend extends MsgControl {
 
     /**
+     * The input stream for the GUI.
+     */
+    private PrintWriter systemOut;
+
+    /**
+     * Stores whether the GUI is being used.
+     */
+    private boolean usingGUI = false;
+
+    /**
      * Stores whether the thread should end.
      */
     private boolean shutdown = false;
@@ -31,6 +41,26 @@ class ClientSend extends MsgControl {
             this.socket = socket;
             this.in = in;
             this.out = out;
+    }
+
+    /**
+     * Constructor. Used by GUI, sets the socket output stream and the GUI
+     * input stream.
+     *
+     * @param socket
+     *      The socket that the client is connected on.
+     *
+     * @param socketOut
+     *      The socket output stream.
+     *
+     * @param systemOut
+     *      The GUI input stream.
+     */
+    ClientSend(Socket socket, PrintWriter socketOut, PrintWriter systemOut) {
+        usingGUI = true;
+        this.socket = socket;
+        this.out = socketOut;
+        this.systemOut = systemOut;
     }
 
     /**
@@ -139,6 +169,9 @@ class ClientSend extends MsgControl {
     @Override
     void msgServer(String message) {
         String msgOut = msgBuilder(1, message);
+        if (usingGUI) {
+            systemOut.println("You to \"server\" > " + message);
+        }
         out.println(msgOut);
     }
 
@@ -154,6 +187,9 @@ class ClientSend extends MsgControl {
     @Override
     void msgAll(String name, String message) {
         String msgOut = msgBuilder(2, message);
+        if (usingGUI) {
+            systemOut.println("You > " + message);
+        }
         out.println(msgOut);
     }
 
@@ -170,7 +206,15 @@ class ClientSend extends MsgControl {
     @Override
     void msgDirect(String name, String message) {
         String msgOut = msgBuilder(3, message);
-        out.println(msgOut);
+        String[] parts = message.split(":", 2);
+        if (parts.length == 2) {
+            if (usingGUI) {
+                systemOut.println("You to " + parts[0] + " > " + parts[1]);
+            }
+            out.println(msgOut);
+        } else {
+            brokenMsg();
+        }
     }
 
     /**
@@ -194,6 +238,9 @@ class ClientSend extends MsgControl {
     @Override
     void kick(String kickedBy, String toKick) {
         String msgOut = msgBuilder(5, toKick);
+        if (usingGUI) {
+            systemOut.println("Remove \"" + toKick + "\" from chat.");
+        }
         out.println(msgOut);
     }
 }
