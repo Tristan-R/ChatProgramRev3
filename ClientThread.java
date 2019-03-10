@@ -245,15 +245,25 @@ class ClientThread extends MsgControl {
     @Override
     void getClientsList() {
         String list = "";
-        int i = 1;
+        String messageOut = msgBuilder(4, "null", "CLIENTS:\n");
+        int i = 0;
         for (String client : clients.keySet()) {
-            list = list.concat("\t" + client);
+            list = list.concat("     " + client);
 
             if (++i % 4 == 0) {
-                list = list.concat("\n");
+                if (i != 4) {
+                    messageOut = messageOut.concat("\n");
+                }
+                messageOut = messageOut.concat(msgBuilder(4, "null", list));
+                list = "";
             }
         }
-        String messageOut = msgBuilder(4, "null", list);
+        if (i % 4 != 0) {
+            if (i > 4) {
+                messageOut = messageOut.concat("\n");
+            }
+            messageOut = messageOut.concat(msgBuilder(4, "null", list));
+        }
         out.println(messageOut);
     }
 
