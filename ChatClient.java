@@ -51,17 +51,24 @@ public class ChatClient {
     /**
      * Starts a new thread for receiving user input and sending to the server
      * and a new thread for receiving from the server.
+     *
+     * @param usingGUI
+     *      Whether the GUI is being used.
      */
-    private void begin() {
+    private void begin(boolean usingGUI) {
         try {
             BufferedReader socketIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter socketOut = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
 
-            new Thread(new ClientSend(socket, userIn, socketOut)).start();
+            if (usingGUI) {
+                Thread GUI = new Thread(() -> ClientGUI.begin(socket, socketIn, socketOut));
+                GUI.start();
 
-            new Thread(new ClientReceive(socket, socketIn)).start();
-
+            } else {
+                new Thread(new ClientSend(socket, userIn, socketOut)).start();
+                new Thread(new ClientReceive(socket, socketIn)).start();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,35 +80,46 @@ public class ChatClient {
      *
      * @param args
      *      Used to change the port number if -ccp flag is entered and the IP
-     *      address if -cca flag is entered.
+     *      address if -cca flag is entered. Will also launch the GUI if the
+     *      -gui flag is entered.
      */
     public static void main(String[] args) {
+        boolean launchGUI = false;
         String address = "localhost";
         int portNumber = 14001;
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-cca")) {
-                if (i + 1 < args.length) {
-                    address = args[i + 1];
-                } else {
-                    System.err.println("No address given.");
-                    System.exit(-1);
-                }
-            } else if (args[i].equals("-ccp")) {
-                if (i + 1 < args.length) {
-                    try {
-                        portNumber = Integer.parseInt(args[i + 1]);
 
-                    } catch (NumberFormatException e) {
-                        System.err.println("Error in port number.");
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i]) {
+                case "-cca":
+                    if (i + 1 < args.length) {
+                        address = args[i + 1];
+                    } else {
+                        System.err.println("No address given.");
                         System.exit(-1);
                     }
-                } else {
-                    System.err.println("No port number given.");
-                    System.exit(-1);
-                }
+                    break;
+
+                case "-ccp":
+                    if (i + 1 < args.length) {
+                        try {
+                            portNumber = Integer.parseInt(args[i + 1]);
+
+                        } catch (NumberFormatException e) {
+                            System.err.println("Error in port number.");
+                            System.exit(-1);
+                        }
+                    } else {
+                        System.err.println("No port number given.");
+                        System.exit(-1);
+                    }
+                    break;
+
+                case "-gui":
+                    launchGUI = true;
+                    break;
             }
         }
         System.out.println("Connecting to server on : " + address + " ; " + portNumber);
-        new ChatClient(address, portNumber).begin();
+        new ChatClient(address, portNumber).begin(launchGUI);
     }
 }
