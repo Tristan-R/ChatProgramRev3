@@ -13,23 +13,6 @@ import java.net.UnknownHostException;
  * messages.
  */
 public class ChatClient {
-    /*
-    Sending Commands:
-        0 - EXIT
-        1 - Send to server
-        2 - Send to all
-        3 - Direct message
-        4 - See current clients
-        5 - Kicked from chat
-
-    Receiving Commands:
-        0 - EXIT
-        1 - Received from server
-        2 - Received global message
-        3 - Received direct message
-        4 - List of clients
-        5 - Kick command
-     */
 
     /**
      * Store the socket that the client is connected on.
@@ -65,13 +48,13 @@ public class ChatClient {
      */
     private void begin() {
         try {
-            BufferedReader serverIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter serverOut = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader socketIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter socketOut = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
 
-            new Thread(new ClientSend(socket, userIn, serverOut)).start();
+            new Thread(new ClientSend(socket, userIn, socketOut)).start();
 
-            new Thread(new ClientReceive(socket, serverIn)).start();
+            new Thread(new ClientReceive(socket, socketIn)).start();
 
         } catch (IOException e) {
             e.printStackTrace();
