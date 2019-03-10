@@ -69,7 +69,7 @@ class ClientThread extends MsgControl {
             }
         } catch (SocketException e) {
             if (!endThread()) {
-                System.err.println("Connection to socket lost.");
+                System.out.println("Connection to socket lost.");
                 shutdown = true;
             }
         } catch (IOException e) {
