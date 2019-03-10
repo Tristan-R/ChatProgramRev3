@@ -11,6 +11,16 @@ import java.net.Socket;
 class ClientReceive extends MsgControl {
 
     /**
+     * The GUI controller object.
+     */
+    private ClientGUIController GUI;
+
+    /**
+     * Stores whether the GUI is being used.
+     */
+    private boolean usingGUI = false;
+
+    /**
      * Constructor.
      *
      * @param socket
@@ -22,6 +32,29 @@ class ClientReceive extends MsgControl {
             this.socket = socket;
             this.in = in;
             out = new PrintWriter(System.out, true);
+    }
+
+    /**
+     * Constructor. Used by GUI, sets the input stream and output stream.
+     *
+     * @param socket
+     *      The socket that the client is connected on.
+     *
+     * @param in
+     *      The socket input stream.
+     *
+     * @param out
+     *      The socket output stream.
+     *
+     * @param GUI
+     *      The GUI controller object.
+     */
+    ClientReceive(Socket socket, BufferedReader in, PrintWriter out, ClientGUIController GUI) {
+        usingGUI = true;
+        this.GUI = GUI;
+        this.socket = socket;
+        this.in = in;
+        this.out = out;
     }
 
     /**
@@ -37,6 +70,10 @@ class ClientReceive extends MsgControl {
                  if (message.startsWith("READY")) {
                      String[] split = message.split(":");
                      name = split[1];
+                     if (usingGUI) {
+                         // Updates the user's name displayed in the GUI
+                         UpdateGUI.setName(GUI, name);
+                     }
                      out.println("Entering chat.\n");
                      break;
                  }
