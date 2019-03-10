@@ -43,8 +43,10 @@ public class ServerGUI extends Application {
     private void shutdown() {
         try {
             server.close();
+
         } catch (IOException e) {
             e.printStackTrace();
+
         } finally {
             System.exit(0);
         }
