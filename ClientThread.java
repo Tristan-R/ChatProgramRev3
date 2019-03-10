@@ -59,6 +59,10 @@ class ClientThread extends MsgControl {
                             }
                         }
                     }
+                } else if (parts[0].equals("0")) {
+                    shutdown = true;
+                    break;
+
                 } else {
                     out.println("Invalid name.");
                 }
