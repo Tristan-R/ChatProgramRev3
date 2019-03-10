@@ -12,6 +12,11 @@ import java.net.ServerSocket;
 class ServerThread extends MsgControl {
 
     /**
+     * Stores whether the GUI is being used.
+     */
+    private boolean usingGUI = false;
+
+    /**
      * Stores the socket that the server is running on.
      */
     private ServerSocket server;
@@ -30,12 +35,28 @@ class ServerThread extends MsgControl {
     }
 
     /**
+     * Constructor. Used by GUI, creates a new output stream.
+     *
+     * @param server
+     *      The socket that the server is connected on.
+     *
+     * @param out
+     *      The output stream for writing to the GUI.
+     */
+    ServerThread(ServerSocket server, PrintWriter out) {
+        name = "server";
+        usingGUI = true;
+        this.server = server;
+        this.out = out;
+        serverWriter = out;
+    }
+
+    /**
      * Sets the name of the server.
      */
     @Override
     void setName() {
         name = "server";
-        admins.add(name);
     }
 
     /**
@@ -188,6 +209,9 @@ class ServerThread extends MsgControl {
      */
     @Override
     void msgAll(String from, String message) {
+        if (usingGUI) {
+            out.println("BROADCAST: " + message);
+        }
         String messageOut = msgBuilder(2, name, message);
 
         for (String client : clients.keySet()) {
@@ -211,6 +235,9 @@ class ServerThread extends MsgControl {
 
         if (parts.length == 2) {
             if (clients.containsKey(parts[0])) {
+                if (usingGUI) {
+                    out.println("DIRECT TO \"" + parts[0] + "\": " + parts[1]);
+                }
                 String messageOut = msgBuilder(3, name, parts[1]);
                 clients.get(parts[0]).println(messageOut);
 
@@ -223,8 +250,8 @@ class ServerThread extends MsgControl {
     }
 
     /**
-     * Prints a list of all clients connected to the server and specifies admin
-     * if that client is an admin.
+     * Prints a list of all clients connected to the server and specifies which
+     * clients are admins.
      */
     @Override
     void getClientsList() {
@@ -241,8 +268,11 @@ class ServerThread extends MsgControl {
                 list = list.concat("\n");
             }
         }
-
-        out.println(list);
+        if (usingGUI) {
+            out.println("CLIENTS:\n" + list);
+        } else {
+            out.println(list);
+        }
     }
 
     /**
@@ -257,6 +287,9 @@ class ServerThread extends MsgControl {
     @Override
     void kick(String kickedBy, String toKick) {
         if (clients.containsKey(toKick)) {
+            if (usingGUI) {
+                out.println("REMOVED: " + toKick);
+            }
             PrintWriter kickClient = clients.remove(toKick);
             admins.remove(toKick);
             String removeMsg = msgBuilder(5, "server", "null");
@@ -281,6 +314,9 @@ class ServerThread extends MsgControl {
 
             } else {
                 admins.add(client);
+                if (usingGUI) {
+                    out.println("PROMOTED: \"" + client + "\"");
+                }
             }
         } else {
             out.println("Could not find this user.");
@@ -297,6 +333,8 @@ class ServerThread extends MsgControl {
         if (clients.containsKey(client)) {
             if (!admins.remove(client)) {
                 out.println("This user is not an admin.");
+            } else if (usingGUI) {
+                out.println("DEMOTED: \"" + client + "\"");
             }
         } else {
             out.println("Could not find this user.");
