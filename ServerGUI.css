@@ -1,0 +1,46 @@
+.root,
+BorderPane {
+    -fx-pref-height: 400.0;
+    -fx-pref-width: 600.0;
+    -fx-min-width: 470.0;
+}
+
+.statusBar {
+    -fx-pref-height: 40.0;
+    -fx-pref-width: 600.0;
+    -fx-padding: 0 0 0 15;
+    -fx-alignment: center-left;
+    -fx-background-color: lightgreen;
+}
+
+#infoBox {
+    -fx-pref-height: 360.0;
+    -fx-pref-width: 270.0;
+}
+
+VBox {
+    -fx-pref-height: 360.0;
+    -fx-pref-width: 250.0;
+}
+
+#chatBox {
+    -fx-pref-height: 315.0;
+    -fx-pref-width: 250.0;
+}
+
+.userInput {
+    -fx-pref-height: 45.0;
+    -fx-pref-width: 250.0;
+}
+
+#inputBox {
+    -fx-pref-height: 45.0;
+    -fx-pref-width: 205.0;
+}
+
+Button {
+    -fx-pref-height: 45.0;
+    -fx-pref-width: 45.0;
+    -fx-min-width: 45.0;
+    -fx-cursor: hand;
+}
