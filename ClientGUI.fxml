@@ -12,7 +12,7 @@
     <top>
         <HBox styleClass="statusBar" BorderPane.alignment="CENTER">
             <Label text="Name: " />
-            <Label fx:id="name"/>
+            <Label fx:id="name" />
         </HBox>
     </top>
     <right>
