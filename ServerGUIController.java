@@ -1,11 +1,16 @@
-import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 
+/**
+ * Controller class for client GUI.
+ */
 public class ServerGUIController {
     public Label portNumber;
     public TextArea chatBox;
@@ -13,6 +18,9 @@ public class ServerGUIController {
     public TextField inputBox;
     private ServerThread serverThread;
 
+    /**
+     * Called on startup of GUI, sets up output to text areas.
+     */
     public void initialize() {
         Console chatConsole = new Console(chatBox);
         PrintStream chatStream = new PrintStream(chatConsole, true);
@@ -32,6 +40,9 @@ public class ServerGUIController {
         portNumber.setText(Integer.toString(server.getLocalPort()));
     }
 
+    /**
+     * Sends input to serverThread object for processing.
+     */
     private void sendInput() {
         String input = inputBox.getCharacters().toString();
         inputBox.setText("");
@@ -44,22 +55,49 @@ public class ServerGUIController {
         }
     }
 
-    public void onPress(ActionEvent actionEvent) {
+    /**
+     * Called on Send button press.
+     */
+    public void onPress() {
         sendInput();
     }
 
-    public void onEnter(ActionEvent actionEvent) {
+    /**
+     * Called on Enter key.
+     */
+    public void onEnter() {
         sendInput();
     }
 
+    /**
+     * Console class for printing system output to a text area.
+     */
     public static class Console extends OutputStream {
 
+        /**
+         * The text area to print to.
+         */
         private TextArea output;
 
-        public Console(TextArea ta) {
+        /**
+         * Constructor.
+         *
+         * @param ta
+         *      The text area to print to.
+         */
+        Console(TextArea ta) {
             this.output = ta;
         }
 
+        /**
+         * Writes the specified byte to the text area.
+         *
+         * @param i
+         *      The byte.
+         *
+         * @throws IOException
+         *      If an I/O error occurs.
+         */
         @Override
         public void write(int i) throws IOException {
             output.appendText(String.valueOf((char) i));
