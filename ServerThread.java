@@ -164,7 +164,7 @@ class ServerThread extends MsgControl {
                 admins.remove(client);
                 String removeMsg = msgBuilder(0, "server", "null");
                 clientOut.println(removeMsg);
-                removeClients.kickModify("Add", client);
+                removeClients.add(client);
             }
             server.close();
             out.println("Server disconnected.");
@@ -294,7 +294,7 @@ class ServerThread extends MsgControl {
             admins.remove(toKick);
             String removeMsg = msgBuilder(5, "server", "null");
             kickClient.println(removeMsg);
-            removeClients.kickModify("Add", toKick);
+            removeClients.add(toKick);
 
         } else {
             out.println("Could not find this user.");

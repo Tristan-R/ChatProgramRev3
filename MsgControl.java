@@ -218,8 +218,7 @@ public abstract class MsgControl implements Runnable {
             while (!endThread()) {
                 input = in.readLine();
 
-                if (removeClients.kickSearch(name)) {
-                    removeClients.kickModify("Remove", name);
+                if (removeClients.remove(name)) {
                     return;
 
                 } else if (!endThread()) {

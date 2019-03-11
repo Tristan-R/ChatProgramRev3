@@ -15,32 +15,26 @@ class RemoveClientStore {
     }
 
     /**
-     * Synchronised method for adding or removing a client from the list of
-     * removed clients.
-     *
-     * @param operation
-     *      Identifies whether a client is to be added or removed.
+     * Synchronized method for adding a client to the list of removed clients.
      *
      * @param name
-     *      The name of the client to be added or removed.
+     *      The name of the client to be added.
      */
-    synchronized void kickModify(String operation, String name) {
-        if (operation.equals("Add")) {
-            removeClients.add(name);
-        } else if (operation.equals("Remove")) {
-            removeClients.remove(name);
-        }
+    synchronized void add(String name) {
+        removeClients.add(name);
     }
 
     /**
-     * Synchronised method to check if a client needs to be kicked.
+     * Synchronized method for removing a client from the list of removed
+     * clients.
+     *
      * @param name
-     *      The client name to search for.
+     *      The name of the client to be removed.
      *
      * @return
-     *      Whether the client is in the list of kicked clients.
+     *      Whether the client was successfully removed.
      */
-    synchronized boolean kickSearch(String name) {
-        return removeClients.contains(name);
+    synchronized boolean remove(String name) {
+        return removeClients.remove(name);
     }
 }

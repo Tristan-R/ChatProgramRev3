@@ -293,7 +293,7 @@ class ClientThread extends MsgControl {
                     PrintWriter kickClient = clients.remove(toKick);
                     String removeMsg = msgBuilder(5, "server", "null");
                     kickClient.println(removeMsg);
-                    removeClients.kickModify("Add", toKick);
+                    removeClients.add(toKick);
                 }
             } else {
                 String messageOut = msgBuilder(1, "server", "This user does not exist.");
