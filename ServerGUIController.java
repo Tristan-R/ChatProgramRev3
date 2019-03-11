@@ -70,6 +70,13 @@ public class ServerGUIController {
     }
 
     /**
+     * Closes the server when the close button is pressed.
+     */
+    public void onExit() {
+        serverThread.exit();
+    }
+
+    /**
      * Console class for printing system output to a text area.
      */
     public static class Console extends OutputStream {

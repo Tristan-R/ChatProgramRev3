@@ -85,6 +85,13 @@ public class ClientGUIController {
     }
 
     /**
+     *
+     */
+    public void onExit() {
+        clientSend.exit();
+    }
+
+    /**
      * Console class for printing system output to a text area.
      */
     public static class Console extends OutputStream {

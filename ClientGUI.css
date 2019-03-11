@@ -8,9 +8,14 @@ BorderPane {
 .statusBar {
     -fx-pref-height: 40.0;
     -fx-pref-width: 600.0;
-    -fx-padding: 0 0 0 15;
+    -fx-padding: 0 15 0 15;
     -fx-alignment: center-left;
     -fx-background-color: lightgreen;
+}
+
+.statusBar > Button {
+    -fx-pref-height: 20.0;
+    -fx-pref-width: 65.0;
 }
 
 #infoBox {
@@ -43,4 +48,8 @@ Button {
     -fx-pref-width: 45.0;
     -fx-min-width: 45.0;
     -fx-cursor: hand;
+}
+
+Button:hover {
+    -fx-background-color: lightgrey;
 }

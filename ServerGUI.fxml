@@ -7,12 +7,16 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
 
 <BorderPane stylesheets="/ServerGUI.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ServerGUIController">
     <top>
         <HBox styleClass="statusBar" BorderPane.alignment="CENTER">
             <Label text="Port Number: " />
             <Label fx:id="portNumber" text="Unknown" />
+            <Region HBox.hgrow="ALWAYS">
+            </Region>
+            <Button mnemonicParsing="false" onAction="#onExit" text="CLOSE" />
         </HBox>
     </top>
     <right>
