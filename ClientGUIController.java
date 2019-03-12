@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -93,6 +94,12 @@ public class ClientGUIController {
 
     /**
      * Console class for printing system output to a text area.
+     *
+     * This code came from users 'Dreen' and 'assylias' on Stack Overflow,
+     * found at :
+     *      https://stackoverflow.com/questions/13841884
+     *      /redirecting-system-out-to-a-textarea-in-javafx
+     * accessed 6th March 2019.
      */
     public static class Console extends OutputStream {
 
@@ -122,7 +129,7 @@ public class ClientGUIController {
          */
         @Override
         public void write(int i) throws IOException {
-            output.appendText(String.valueOf((char) i));
+            Platform.runLater(() -> output.appendText(String.valueOf((char) i)));
         }
     }
 }
