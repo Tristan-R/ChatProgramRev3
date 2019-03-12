@@ -1,5 +1,10 @@
 import java.util.ArrayList;
 
+/**
+ * RemoveClientStore object
+ * <p>
+ * Stores clients to be removed from the chat.
+ */
 class RemoveClientStore {
 
     /**

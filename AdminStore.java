@@ -1,5 +1,10 @@
 import java.util.ArrayList;
 
+/**
+ * AdminStore object
+ * <p>
+ * Stores clients that have admin permissions.
+ */
 class AdminStore {
 
     /**
