@@ -86,7 +86,7 @@ public class ClientGUIController {
     }
 
     /**
-     *
+     * Closes the client when the close button is pressed.
      */
     public void onExit() {
         clientSend.exit();
